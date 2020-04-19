@@ -15,4 +15,4 @@ test:
 
 production:
   <<: *default
-  database: keepon_dev
+  database: keepon_prod
