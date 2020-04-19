@@ -1,0 +1,5 @@
+ru:
+  test_result:
+    result_type:
+      viral_load: вирусная нагрузка
+      immune_status: имунный статус

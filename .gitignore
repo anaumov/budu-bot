@@ -37,4 +37,5 @@ yarn-debug.log*
 
 config/secrets.yml
 
+.DS_store
 notes
