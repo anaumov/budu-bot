@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 class TelegramWebhooksController < Telegram::Bot::UpdatesController
   def start!(*)
     respond_with :message, text: 'Привет! Я будубот, я буду напоминать тебе о приеме лекарств и помогу следить за иммунным статусом и вирусной нагрузкой.'
   end
 
-  def message(message)
-   respond_with :message, text: "Ваша вирусная нагрузка 0 на #{Date.today}. Верно?", reply_markup: {
+  def message(_message)
+    respond_with :message, text: "Ваша вирусная нагрузка 0 на #{Date.today}. Верно?", reply_markup: {
       inline_keyboard: [
         [
-          { text: 'Да, верно!', callback_data: 'yes_vn'},
-          { text: 'Нет', callback_data: 'nope'},
+          { text: 'Да, верно!', callback_data: 'yes_vn' },
+          { text: 'Нет', callback_data: 'nope' }
         ]
       ]
     }

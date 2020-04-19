@@ -1,6 +1,6 @@
-# frozen_string_liteal: true
+# frozen_string_literal: true
 
-Secrets =
+Secrets = # rubocop:disable Naming/ConstantName
   if Rails.env.production?
     Rails.application.credentials
   else

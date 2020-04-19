@@ -1,0 +1,35 @@
+AllCops:
+  Exclude:
+    - bin/*
+    - db/schema.rb
+    - 'tmp/**/*'
+    - db/migrate/*.rb
+    - db/*.rb
+    - node_modules/**/*
+    - vendor/**/*
+    - Gemfile
+    - config/environments/development.rb
+    - config/initializers/simple_form_bootstrap.rb
+    - config/initializers/simple_form.rb
+  TargetRubyVersion: 2.7
+
+Style/Documentation:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 200
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 20
