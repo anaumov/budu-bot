@@ -36,8 +36,24 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 
-  gem 'rubocop'
+  gem 'rubocop', require: false
   gem 'overcommit', require: false
+
+
+  # Deploy with capistrano
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rbenv'
+  gem 'capistrano3-puma'
+  gem 'capistrano-rails-console'
+  gem 'capistrano-rails-tail-log'
+  gem 'capistrano-db-tasks', require: false
+  gem 'capistrano-shell', require: false
+  gem 'capistrano3-delayed-job', '~> 1.0'
+  gem 'capistrano-sidekiq', require: false
+  gem 'capistrano-local-precompile', require: false
+  gem 'sshkit-sudo'
 end
 
 group :test do
