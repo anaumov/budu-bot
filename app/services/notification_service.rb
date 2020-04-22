@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class NotificationService
-  def self.notifiy_users
-    current_hour = Time.now.hour
+  def self.notify_users
+    # FIXME: use user timezone
+    current_hour = Time.zone.now.hour
     greeting = current_hour < 13 ? 'Доброе утро!' : 'Добрый вечер!'
     message = "#{greeting} Не забудь принять лекарства. Сообщи мне, пожалуйста, когда выпьешь."
     buttons = [

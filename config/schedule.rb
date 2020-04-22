@@ -16,7 +16,7 @@
 # end
 #
 every 1.hour do
-  runner 'NotificationService.notifiy_users'
+  runner 'NotificationService.notify_users'
 end
 
 # Learn more: http://github.com/javan/whenever
