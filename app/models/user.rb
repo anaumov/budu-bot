@@ -6,4 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable
 
   has_many :test_results
+
+  def notification_set?
+    notification_time.present?
+  end
 end

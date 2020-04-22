@@ -2,6 +2,7 @@
 
 class TelegramWebhooksController < Telegram::Bot::UpdatesController
   include TelegramUserConcern
+  include TelegramCallbacksConcern
 
   def start!(*)
     respond_with :message, text: "Привет, #{current_user.first_name}! Я продолжаю-бот, я буду напоминать тебе каждый день о приеме лекарств и помогу следить за иммунным статусом и вирусной нагрузкой."
@@ -18,6 +19,23 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     respond_with :message, text: message
   end
 
+  def setup!(*)
+    message = if current_user.notification_set?
+                "Сейчас я напоминаю вам о приеме лекарств ровно в #{current_user.notification_time}:00. Хотите поменять время?"
+              else
+                'Когда вы вам нужно принимать лекарства?'
+              end
+    respond_with :message, text: message, reply_markup: {
+      inline_keyboard: [
+        [
+          { text: 'Утром', callback_data: 'notifications_setup:morning' },
+          { text: 'Вечером', callback_data: 'notifications_setup:evening' },
+          { text: 'Не надо напоминать', callback_data: 'notifications_setup:turn_off' }
+        ]
+      ]
+    }
+  end
+
   def message(message)
     test_result = TestResultsFactory.new(current_user).create_from_message(message)
     respond_with :message, text: "Записал. #{test_result.ru_result_type.capitalize} #{test_result.value} на #{test_result.date}.", reply_markup: {
@@ -32,15 +50,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def callback_query(data)
-    action, value = data.split(':')
-    if action == 'remove_test_result'
-      current_user.test_results.find(value).destroy
-      respond_with :message, text: 'Удалил'
-    elsif action == 'show_graph'
-      respond_with :photo, photo: File.open(File.join(Rails.root, "#{value}_demo.png"))
-    else
-      answer_callback_query 'Ок, повторите запись'
-    end
+    parse_callback_data_and_response(data)
   end
 
   def action_missing(action)
