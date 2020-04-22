@@ -10,7 +10,7 @@ module TelegramUserConcern
   def create_user!
     User
       .create_with(user_params)
-      .find_or_create_by!(telegram_id: from['id'])
+      .find_or_create_by!(telegram_chat_id: chat['id'])
   end
 
   def user_params

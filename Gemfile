@@ -19,6 +19,7 @@ gem 'telegram-bot'
 gem 'telegram-bot-types'
 
 gem 'devise'
+gem 'whenever', require: false
 
 group :development, :test do
   gem 'database_rewinder'

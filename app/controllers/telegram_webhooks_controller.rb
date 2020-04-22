@@ -20,20 +20,16 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def setup!(*)
-    message = if current_user.notification_set?
-                "Сейчас я напоминаю вам о приеме лекарств ровно в #{current_user.notification_time}:00. Хотите поменять время?"
-              else
-                'Когда вы вам нужно принимать лекарства?'
-              end
-    respond_with :message, text: message, reply_markup: {
-      inline_keyboard: [
-        [
-          { text: 'Утром', callback_data: 'notifications_setup:morning' },
-          { text: 'Вечером', callback_data: 'notifications_setup:evening' },
-          { text: 'Не надо напоминать', callback_data: 'notifications_setup:turn_off' }
-        ]
-      ]
-    }
+    message = 'Когда вам нужно принимать лекарства?'
+    buttons = [
+      { text: 'Утром', callback_data: 'notifications_setup:morning' },
+      { text: 'Вечером', callback_data: 'notifications_setup:evening' }
+    ]
+    if current_user.notification_set?
+      message = "Сейчас я напоминаю вам о приеме лекарств ровно в #{current_user.notification_time}:00. Хотите поменять время?"
+      buttons.push({ text: 'Выключить напоминания', callback_data: 'notifications_setup:turn_off' })
+    end
+    respond_with :message, text: message, reply_markup: { inline_keyboard: [buttons] }
   end
 
   def message(message)
