@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NotificationService
-  def notifiy_users
+  def self.notifiy_users
     current_hour = Time.now.hour
     greeting = current_hour < 13 ? 'Доброе утро!' : 'Добрый вечер!'
     message = "#{greeting} Не забудь принять лекарства. Сообщи мне, пожалуйста, когда выпьешь."
