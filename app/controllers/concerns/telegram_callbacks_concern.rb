@@ -33,25 +33,28 @@ module TelegramCallbacksConcern
       respond_with_times((16..22).to_a)
     when 'turn_off'
       current_user.update!(notification_time: nil)
-      respond_with :message, text: 'Выключил ежедневные уведомления.'
+      edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
+      respond_with :message, text: 'Выключил ежедневные уведомления. Включить можно через команду /setup.'
     else
       raise :err
     end
   end
 
   def respond_with_times(hours)
-    respond_with :message, text: 'В какое время напоминать?', reply_markup: {
-      inline_keyboard: [buttons_by_hours(hours)]
+    edit_message :reply_markup, reply_markup: {
+      inline_keyboard: buttons_by_hours(hours)
     }
   end
 
   def buttons_by_hours(hours)
-    hours.map { |hour| { text: "#{hour}:00", callback_data: "set_notification:#{hour}" } }
+    hour_to_button = ->(hour) { { text: "#{hour}:00", callback_data: "set_notification:#{hour}" } }
+    [hours[0..2].map(&hour_to_button), hours[3..5].map(&hour_to_button)]
   end
 
   def set_notification
     current_user.update!(notification_time: value)
-    respond_with :message, text: "Я буду напоминать вам о приеме лекарств ровно в #{current_user.notification_time}:00."
+    edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
+    respond_with :message, text: "Я буду напоминать вам о приеме лекарств ровно в #{current_user.notification_time}:00. Поменять время всегда можно через команду /setup."
   end
 
   def valid_action?
