@@ -28,7 +28,7 @@ module TelegramCallbacksConcern
   def notifications_setup
     case value
     when 'morning'
-      respond_with_times((6..12).to_a)
+      respond_with_times((7..12).to_a)
     when 'evening'
       respond_with_times((16..22).to_a)
     when 'turn_off'
