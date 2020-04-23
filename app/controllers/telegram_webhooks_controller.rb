@@ -15,18 +15,27 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def table!(*)
-    message = "Дата       ВН         CD4\n"
-    current_user.test_results.order(date: :asc).group_by(&:date).each do |date, results|
-      immune_status = results.find(&:immune_status?)
-      viral_load = results.find(&:viral_load?).value.to_s
-      viral_load = viral_load.size < 6 ? (viral_load + ' ' * 2 * (6 - viral_load.size)) : viral_load
-      message += "#{date.strftime('%d.%m.%y')}  #{viral_load}  #{immune_status&.value}\n"
-    end
-    respond_with :message, text: message
+    respond_with :message, text: results_as_table
+  end
+
+  def graph!(*)
+    respond_with :photo, photo: File.open(File.join(Rails.root, 'viral_load_demo.png'))
+    respond_with :photo, photo: File.open(File.join(Rails.root, 'immune_status_demo.png'))
   end
 
   def setup!(*)
     setup_notifications
+  end
+
+  def help!(*)
+    message = "Как работать с ботом?\n"\
+              "/setup — настроить ежедневные уведомления о примеме лекарств.\n" \
+              "Получить днные изменения иммунного статуса и вирусной нагрузки в виде графиков — /graph, в виде таблицы — /table.\n\n" \
+              "*Внесение результатов анализов*\n" \
+              "Пришлите сообщение «вирусная нагрузка 0 12.04.2017». Я пойму, что ваша вирусная нагрузка на 12 апреля 2017 года равна 0.\n" \
+              "Пришлите сообщение «иммунный статус 440 12.04.2017». Я пойму, что ваш иммунный статус на 12 апреля 2017 года равен 440.\n" \
+              "Также можно в сокращенном виде: «вн 0 12.04.2017» и «ис 440 12.04.2017».\n"
+    respond_with :message, text: message, parse_mode: :Markdown
   end
 
   def message(message)
