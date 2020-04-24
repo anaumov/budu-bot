@@ -19,8 +19,10 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def graph!(*)
-    respond_with :photo, photo: File.open(File.join(Rails.root, 'viral_load_demo.png'))
-    respond_with :photo, photo: File.open(File.join(Rails.root, 'immune_status_demo.png'))
+    service = GraphService.new(current_user)
+    respond_with :message, text: 'Готовлю графики...'
+    respond_with :photo, photo: service.render_image(:immune_status)
+    respond_with :photo, photo: service.render_image(:viral_load)
   end
 
   def setup!(*)

@@ -20,6 +20,7 @@ gem 'telegram-bot-types'
 
 gem 'devise'
 gem 'whenever', require: false
+gem 'imgkit'
 
 group :development, :test do
   gem 'database_rewinder'
