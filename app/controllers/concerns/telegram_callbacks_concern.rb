@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TelegramCallbacksConcern
-  ALLOWED_ACTIONS = %w[remove_test_result show_graph notifications_setup set_notification].freeze
+  ALLOWED_ACTIONS = %w[remove_test_result show_graph notifications_setup set_notification daily_pill].freeze
 
   def parse_callback_data_and_response(data)
     @action, @value = data.split(':')
@@ -15,6 +15,20 @@ module TelegramCallbacksConcern
   private
 
   attr_reader :action, :value
+
+  def daily_pill
+    message = 'Ой. Что-то пошло не так. Мы резберемся.'
+    if value == 'yes'
+      message = 'Супер, так держать!'
+      current_user.pill_done!
+    elsif value == 'no'
+      message = 'Записал. Буду надеятся, что завтра ты примешь терапию.'
+      current_user.pull_undone!
+    end
+
+    edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
+    respond_with :message, text: message
+  end
 
   def remove_test_result
     current_user.test_results.find(value).destroy
