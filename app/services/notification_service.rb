@@ -10,7 +10,7 @@ class NotificationService
       { text: 'Принял! 💪', callback_data: 'daily_pill:yes' },
       { text: 'Не принял', callback_data: 'daily_pill:no' }
     ]
-    User.where(notification_time: current_hour).each do |user|
+    User.where(notification_time: current_hour + 1).each do |user|
       Telegram.bot.send_message(
         chat_id: user.telegram_chat_id,
         text: message,

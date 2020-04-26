@@ -23,7 +23,7 @@ module TelegramCallbacksConcern
       current_user.pill_done!
     elsif value == 'no'
       message = 'Записал. Буду надеятся, что завтра ты примешь терапию.'
-      current_user.pull_undone!
+      current_user.pill_undone!
     end
 
     edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
@@ -32,6 +32,7 @@ module TelegramCallbacksConcern
 
   def remove_test_result
     current_user.test_results.find(value).destroy
+    edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
     respond_with :message, text: 'Удалил'
   end
 
