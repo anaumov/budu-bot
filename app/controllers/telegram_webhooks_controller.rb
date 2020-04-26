@@ -49,15 +49,18 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
 
   def message(message)
     test_result = TestResultsFactory.new(current_user, message['text']).create_test_result!
-    respond_with :message, text: "Записал. #{test_result.ru_result_type.capitalize} #{test_result.value} на #{test_result.date.strftime('%d.%m.%Y')}.", reply_markup: {
-      inline_keyboard: [
-        [
-          { text: 'Ок, покажи график.', callback_data: "show_graph:#{test_result.result_type}" },
-          { text: 'Нет, удали запись.', callback_data: "remove_test_result:#{test_result.id}" }
+    if test_result
+      respond_with :message, text: "Записал. #{test_result.ru_result_type.capitalize} #{test_result.value} на #{test_result.date.strftime('%d.%m.%Y')}.", reply_markup: {
+        inline_keyboard: [
+          [
+            { text: 'Ок, покажи график.', callback_data: "show_graph:#{test_result.result_type}" },
+            { text: 'Нет, удали запись.', callback_data: "remove_test_result:#{test_result.id}" }
+          ]
         ]
-      ]
-    }
-    # send graph with delay
+      }
+    else
+      respond_with :message, text: 'Не могу распознать сообщение. Посмотрите примеры с помощью команды /help.'
+    end
   end
 
   def callback_query(data)
