@@ -15,7 +15,7 @@ class GraphService
     controller = ActionController::Base.new
     html = controller.render_to_string(template: 'graphs/show', locals: { points: points })
     kit = IMGKit.new(html, quality: 50)
-    kit.to_file('file.jpg')
+    kit.to_file("#{result_type}_#{user.id}.jpg")
   end
 
   def build_points(result_type)
