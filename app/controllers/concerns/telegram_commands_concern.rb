@@ -4,13 +4,13 @@ module TelegramCommandsConcern
   private
 
   def setup_notifications(init_message = '')
-    message = 'Когда вам нужно принимать лекарства?'
+    message = Message.build(:init_notifications_setup)
     buttons = [
       { text: 'Утром', callback_data: 'notifications_setup:morning' },
       { text: 'Вечером', callback_data: 'notifications_setup:evening' }
     ]
     if current_user.notification_set?
-      message = "Сейчас я напоминаю вам о приеме лекарств ровно в #{current_user.notification_time}:00. Хотите поменять время?"
+      message = Message.build(:notifications_setup, time: "#{current_user.notification_time}:00")
       buttons.push({ text: 'Выключить напоминания', callback_data: 'notifications_setup:turn_off' })
     end
     message = init_message + "\n" + message if init_message.present?
@@ -18,7 +18,7 @@ module TelegramCommandsConcern
   end
 
   def results_as_table
-    return 'Вы еще не внесли данные.' if current_user.test_results.empty?
+    return Message.build(:no_test_results) if current_user.test_results.empty?
 
     "Дата       ВН         CD4\n" \
     "#{build_table}"

@@ -22,6 +22,12 @@ gem 'devise'
 gem 'whenever', require: false
 gem 'imgkit'
 
+gem 'bootstrap'
+gem 'slim'
+gem 'kaminari'
+gem 'kramdown'
+gem 'simple_form'
+
 group :development, :test do
   gem 'database_rewinder'
   gem 'factory_bot_rails'

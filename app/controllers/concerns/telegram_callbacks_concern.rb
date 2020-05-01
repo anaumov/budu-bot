@@ -8,7 +8,7 @@ module TelegramCallbacksConcern
     if valid_action?
       send(action)
     else
-      respond_with :message, text: 'Ой, что-то пошло не так. Мы разберемся и починим.'
+      send_message(Message.build(:something_went_wrong))
     end
   end
 
@@ -17,23 +17,23 @@ module TelegramCallbacksConcern
   attr_reader :action, :value
 
   def daily_pill
-    message = 'Ой. Что-то пошло не так. Мы резберемся.'
+    message = Message.build(:something_went_wrong)
     if value == 'yes'
-      message = 'Супер, так держать!'
+      message = Message.build(:pill_done)
       current_user.pill_done!
     elsif value == 'no'
-      message = 'Записал. Буду надеятся, что завтра ты примешь терапию.'
+      message = Message.buil(:pill_undone)
       current_user.pill_undone!
     end
 
-    edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
-    respond_with :message, text: message
+    remove_buttons!
+    send_message(message)
   end
 
   def remove_test_result
     current_user.test_results.find(value).destroy
-    edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
-    respond_with :message, text: 'Удалил'
+    remove_buttons!
+    send_message('Удалил')
   end
 
   def show_graph
@@ -48,8 +48,8 @@ module TelegramCallbacksConcern
       respond_with_times((16..22).to_a)
     when 'turn_off'
       current_user.update!(notification_time: nil)
-      edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
-      respond_with :message, text: 'Выключил ежедневные уведомления. Включить можно через команду /setup.'
+      remove_buttons!
+      send_message(Message.build(:turned_off_notifications))
     else
       raise :err
     end
@@ -68,8 +68,8 @@ module TelegramCallbacksConcern
 
   def set_notification
     current_user.update!(notification_time: value)
-    edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
-    respond_with :message, text: "Я буду напоминать вам о приеме лекарств ровно в #{current_user.notification_time}:00. Поменять время всегда можно через команду /setup."
+    remove_buttons!
+    send_message(Message.build(:notifications_set, time: "#{current_user.notification_time}:00"))
   end
 
   def valid_action?

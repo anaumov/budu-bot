@@ -7,4 +7,8 @@ Rails.application.routes.draw do
   telegram_webhook TelegramWebhooksController
 
   get 'graph/:id' => 'graphs#show'
+
+  namespace :admin do
+    resources :messages
+  end
 end

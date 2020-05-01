@@ -1,0 +1,6 @@
+= simple_form_for [:admin, message], wrapper: :vertical_form do |f|
+  = f.input :desc
+  = f.input :text
+  button.btn.btn-primary[type="submit"] Сохранить
+
+= render 'markdown_note'

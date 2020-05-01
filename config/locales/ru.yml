@@ -1,0 +1,7 @@
+ru:
+  admin:
+    menu:
+      messages: Сообщения
+    action:
+      add:
+        message: Добавить сообщение

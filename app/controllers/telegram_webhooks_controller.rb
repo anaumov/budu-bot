@@ -1,45 +1,44 @@
 # frozen_string_literal: true
 
 class TelegramWebhooksController < Telegram::Bot::UpdatesController
+  include TelegramMessageConcern
   include TelegramUserConcern
   include TelegramCallbacksConcern
   include TelegramCommandsConcern
 
   def start!(*)
-    message = "Привет, #{current_user.first_name}! Я — Продолжаю-бот. Я буду напоминать вам "\
-              'о приеме лекарств и помогу следить за изменением вирусной нагрузки и иммунного '\
-              'статуса. Подробнее обо мне https://продолжаю.рф'
+    message = Message.build(:on_start, name: current_user.first_name)
     if current_user.notification_set?
-      respond_with :message, text: message
+      send_message(message)
     else
       setup_notifications(message)
     end
   end
 
   def table!(*)
-    respond_with :message, text: results_as_table
+    send_message(results_as_table)
   end
 
   # rubocop:disable Metrics/AbcSize
   def graph!(*)
     if current_user.test_results.empty?
-      respond_with :message, text: 'Вы еще не ввели результаты анализов.'
+      send_message(Message.build(:no_test_results))
       return
     end
 
     service = GraphService.new(current_user)
     immune_status_graph = service.render_image(:immune_status)
-    respond_with :message, text: 'Иммунный статус'
+    send_message('Иммунный статус')
     respond_with :photo, photo: immune_status_graph
     File.delete(immune_status_graph.path) if File.exist?(immune_status_graph.path)
 
     viral_load_graph = service.render_image(:viral_load)
-    respond_with :message, text: 'Вирусная нагрузка'
+    send_message('Вирусная нагрузка')
     respond_with :photo, photo: viral_load_graph
     File.delete(viral_load_graph.path) if File.exist?(viral_load_graph.path)
   rescue StandardError => e
     Bugsnag.notify(e) if Rails.env.production?
-    respond_with :message, text: 'Ой, что-то пошло не так. Мы разберемся и починим. Простите, пожалуйста!'
+    send_message(Message.build(:something_went_wrong))
   end
   # rubocop:enable Metrics/AbcSize
 
@@ -48,29 +47,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def help!(*)
-    message = "Как внести результаты анализов:\n"\
-              "Если ваша вирусная нагрузка равна 0 на 12 апреля 2017 года, напишите мне сообщение «вирусная нагрузка 0 12.04.2017» или в сокращенном варианте — «вн 0 12.04.2017».\n" \
-              "Если ваш иммунный статус — 440 на 12 апреля 2017 года, напишите мне сообщение «иммунный статус 440 12.04.2017» или «ис 440 12.04.2017».\n\n" \
-              "Настроить напоминания о приеме лекарств — /setup\n" \
-              "Посмотреть изменения иммунного статуса и вирусной нагрузки в виде графиков — /graph.\n" \
-              "Результаты анализов в виде таблицы — /table.\n"
-    respond_with :message, text: message, parse_mode: :Markdown
-  end
-
-  def message(message)
-    test_result = TestResultsFactory.new(current_user, message['text']).create_test_result!
-    if test_result
-      respond_with :message, text: "Записал. #{test_result.ru_result_type.capitalize} #{test_result.value} на #{test_result.date.strftime('%d.%m.%Y')}.", reply_markup: {
-        inline_keyboard: [
-          [
-            { text: 'Ок, покажи график.', callback_data: "show_graph:#{test_result.result_type}" },
-            { text: 'Нет, удали запись.', callback_data: "remove_test_result:#{test_result.id}" }
-          ]
-        ]
-      }
-    else
-      respond_with :message, text: 'Не могу распознать сообщение. Посмотрите примеры с помощью команды /help.'
-    end
+    send_message(Message.build(:help))
   end
 
   def callback_query(data)
@@ -78,6 +55,6 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def action_missing(action)
-    reply_with :message, text: "Упс, не знаю такой команды #{action}." if command?
+    send_message(Message.build(:unknown_command, command: action)) if command?
   end
 end

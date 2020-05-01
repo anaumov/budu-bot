@@ -1,0 +1,5 @@
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  h1.h2= I18n.t(model_name.pluralize, scope: %i[admin menu])
+  - if false
+    = link_to I18n.t(model_name, scope: %i[admin action add]), send("new_admin_#{model_name}_path"), class: 'btn btn-primary'
+= render 'admin/base/table', scope: items, columns: columns
