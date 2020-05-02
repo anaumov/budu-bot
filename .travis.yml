@@ -1,9 +1,6 @@
 language: ruby
 rvm:
   - 2.7.0
-env:
-  - RUBYOPT='-W:no-deprecated -W:no-experimental'
-  - RAILS_ENv=test
 before_install:
   - mv config/secrets-example.yml config/secrets.yml
 bundler_args: --jobs=2
