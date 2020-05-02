@@ -22,7 +22,7 @@ module TelegramCallbacksConcern
       message = Message.build(:pill_done)
       current_user.pill_done!
     elsif value == 'no'
-      message = Message.buil(:pill_undone)
+      message = Message.build(:pill_undone)
       current_user.pill_undone!
     end
 

@@ -41,6 +41,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :view
   config.include Devise::Test::IntegrationHelpers, type: :feature
   config.include Warden::Test::Helpers, type: :request
+  config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -76,7 +77,7 @@ RSpec.configure do |config|
     # DatabaseRewinder.clean_with :any_arg_that_would_be_actually_ignored_anyway
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseRewinder.clean
   end
 end

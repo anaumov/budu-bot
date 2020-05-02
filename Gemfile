@@ -34,6 +34,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'pry'
   gem 'pry-rails'
+  gem 'timecop'
 end
 
 group :development do
@@ -45,6 +46,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   gem 'rubocop', require: false
+  gem 'rubocop-rspec', require: false
   gem 'overcommit', require: false
 
 
