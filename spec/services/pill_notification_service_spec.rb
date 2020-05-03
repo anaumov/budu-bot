@@ -8,9 +8,7 @@ describe PillNotificationService do
   let(:current_hour) { Time.zone.now.hour }
 
   before do
-    puts 'before_create', User.count
     create(:user, notification_time: hour)
-    puts 'after_create', User.count
     allow(Message).to receive(:build).and_return(double)
     allow(bot).to receive(:send_message)
   end

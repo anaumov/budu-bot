@@ -6,7 +6,7 @@ before_install:
 bundler_args: --jobs=2
 script:
   - bundle exec rake db:setup
-  - bundle exec rspec spec/services/pill_notification_service_spec.rb:31
+  - bundle exec rspec spec
 cache: bundler
 services:
   - postgresql
