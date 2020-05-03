@@ -2,7 +2,7 @@
 
 module Admin
   class MessagesController < Admin::BaseController
-    SHOW_COLUMNS = %w[id slug desc text].freeze
+    SHOW_COLUMNS = %w[desc text].freeze
 
     private
 

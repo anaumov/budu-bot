@@ -5,22 +5,23 @@ html
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag 'admin', media: 'all', 'data-turbolinks-track': 'reload'
-    / = javascript_pack_tag 'admin', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'admin', 'data-turbolinks-track': 'reload'
   body
     nav.navbar.navbar-dark.fixed-top.bg-dark.flex-md-nowrap.p-0.shadow
       a.navbar-brand.col-sm-3.col-md-2.mr-0[href="#"] Админка бота
       ul.navbar-nav.px-3
         li.nav-item.text-nowrap
-          a.nav-link[href="#"] Выйти
+         = link_to('Выйти', destroy_user_session_path, data: { method: :delete }, class: 'nav-link')
     .container-fluid
       .row
-        nav.col-md-2.d-none.d-md-block.bg-light.sidebar
-          .sidebar-sticky
-            ul.nav.flex-column
-              - menu_items.each do |menu_item|
-                li.nav-item
-                  = link_to I18n.t(menu_item, scope: %i[admin menu]), send("admin_#{menu_item.pluralize}_path"), class: "nav-link #{controller_name == menu_item && 'active'}"
-        main.col-md-9.ml-sm-auto.col-lg-10.px-4[role="main"]
+        - if false
+          nav.col-md-2.d-none.d-md-block.bg-light.sidebar
+            .sidebar-sticky
+              ul.nav.flex-column
+                - menu_items.each do |menu_item|
+                  li.nav-item
+                    = link_to I18n.t(menu_item, scope: %i[admin menu]), send("admin_#{menu_item.pluralize}_path"), class: "nav-link #{controller_name == menu_item && 'active'}"
+        main.col-md-12.ml-sm-auto.col-lg-12.px-4[role="main"]
           - if notice.present?
             .alert.alert-info= notice
           - if alert.present?

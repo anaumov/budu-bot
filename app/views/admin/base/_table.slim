@@ -4,7 +4,7 @@
   p.text-info Nothing here
 - else
   .table-sticky-container
-    table.table.table-condensed.table-striped.table-narrow
+    table.table.table-sm.table-borderless.table-hover
       thead.bg-white
         tr
           - columns.each do |column|
@@ -20,14 +20,14 @@
           - decorated = record.decorate!
           tr class=decorated.try(:row_class)
             - columns.each do |column|
-              td class=(decorated.try(:column_class, column) || 'text-nowrap')
+              td class=(decorated.try(:column_class, column))
                 - if allow_edit && allow_edit_column?(record, column)
                   - value = record.send column
                   = smart_best_in_place [namespace, parent, decorated].compact, column, value
                 - else
                   = decorated.send column
             td
-              = link_to 'Редактировать', polymorphic_url([:edit, :admin, record])
+              = link_to 'Редактировать', polymorphic_url([:edit, :admin, record]), class: 'btn btn-primary btn-sm'
               | &nbsp;
               - link_to 'Destroy', polymorphic_url([:admin, record]), method: :delete, data: { confirm: 'Confirm please' }
 
