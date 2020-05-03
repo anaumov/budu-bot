@@ -1,6 +1,8 @@
 language: ruby
 rvm:
   - 2.7.0
+env:
+  - RUBYOPT=-W0
 before_install:
   - mv config/secrets-example.yml config/secrets.yml
 bundler_args: --jobs=2
