@@ -5,7 +5,7 @@ describe PillNotificationService do
   subject(:notify_users) { described_class.notify_users }
 
   let(:bot) { Telegram.bot }
-  let(:current_hour) { Time.now.hour }
+  let(:current_hour) { Time.zone.now.hour }
 
   before do
     create(:user, notification_time: hour)

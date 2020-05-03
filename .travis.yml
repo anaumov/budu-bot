@@ -1,10 +1,14 @@
 language: ruby
 rvm:
-- 2.7.0
+  - 2.7.0
+env:
+  - RUBYOPT=-W0
+before_install:
+  - mv config/secrets-example.yml config/secrets.yml
 bundler_args: --jobs=2
 script:
   - bundle exec rake db:setup
-  - bundle exec rake rspec
+  - bundle exec rspec spec
 cache: bundler
 services:
   - postgresql
