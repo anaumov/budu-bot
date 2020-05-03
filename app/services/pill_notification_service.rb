@@ -23,7 +23,8 @@ class PillNotificationService
   attr_reader :current_hour
 
   def notify_current_hour
-    puts 'notify_current_hour', users_scope(0).count
+    puts User.last.as_json
+    puts current_hour
     send_messages(users: users_scope(0), message_slug: :daily_first)
   end
 
