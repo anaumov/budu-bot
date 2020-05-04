@@ -10,7 +10,7 @@ module TelegramMessageConcern
         value: test_result.value,
         date: test_result.date.strftime('%d.%m.%Y')
       )
-      respond_with text: message, reply_markup: {
+      respond_with :message, text: message, reply_markup: {
         inline_keyboard: [
           [
             { text: 'Ок, покажи график.', callback_data: "show_graph:#{test_result.result_type}" },
