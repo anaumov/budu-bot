@@ -16,7 +16,13 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def table!(*)
-    send_message(results_as_table)
+    message = if current_user.test_results.any?
+                MessagesService.results_as_table(current_user)
+              else
+                Message.build(:no_test_results)
+              end
+
+    send_message(message)
   end
 
   # rubocop:disable Metrics/AbcSize
