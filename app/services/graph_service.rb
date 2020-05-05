@@ -34,7 +34,8 @@ class GraphService
     dates = results.pluck(:date)
     day_resolution = (dates.count > 1 ? GRAPH_WIDTH * 0.9 / (dates.max - dates.min).to_f : GRAPH_WIDTH * 0.9 / 2)
     values = results.pluck(:value)
-    value_resolution = (values.count > 1 ? GRAPH_HEIGHT * 0.9 / values.max.to_f : GRAPH_HEIGHT * 0.9)
+    has_non_zero = (values.uniq.count == 1 && !values.sample.zero?)
+    value_resolution = (values.count > 1 && has_non_zero ? GRAPH_HEIGHT * 0.9 / values.max.to_f : GRAPH_HEIGHT * 0.9)
     results.map do |result|
       x_coord = (result.date - dates.min) * day_resolution
       y_coord = result.value * value_resolution

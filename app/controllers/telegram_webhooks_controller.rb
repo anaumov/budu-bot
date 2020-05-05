@@ -5,6 +5,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   include TelegramUserConcern
   include TelegramCallbacksConcern
   include TelegramCommandsConcern
+  include TelegramGraphConcern
 
   def start!(*)
     message = Message.build(:on_start, name: current_user.first_name)
@@ -19,28 +20,18 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     send_message(results_as_table)
   end
 
-  # rubocop:disable Metrics/AbcSize
   def graph!(*)
     if current_user.test_results.empty?
       send_message(Message.build(:no_test_results))
       return
     end
 
-    service = GraphService.new(current_user)
-    immune_status_graph = service.render_image(:immune_status)
-    send_message('Иммунный статус')
-    respond_with :photo, photo: immune_status_graph
-    File.delete(immune_status_graph.path) if File.exist?(immune_status_graph.path)
-
-    viral_load_graph = service.render_image(:viral_load)
-    send_message('Вирусная нагрузка')
-    respond_with :photo, photo: viral_load_graph
-    File.delete(viral_load_graph.path) if File.exist?(viral_load_graph.path)
+    immune_status_graph
+    viral_load_graph
   rescue StandardError => e
     Bugsnag.notify(e) if Rails.env.production?
     send_message(Message.build(:something_went_wrong))
   end
-  # rubocop:enable Metrics/AbcSize
 
   def setup!(*)
     setup_notifications
@@ -48,6 +39,26 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
 
   def help!(*)
     send_message(Message.build(:help))
+  end
+
+  def message(message)
+    test_result = TestResultsFactory.new(current_user, message['text']).create_test_result!
+    if test_result
+      message = Message.build(
+        :result_saved,
+        result_type: test_result.ru_result_type.capitalize,
+        value: test_result.value,
+        date: test_result.date.strftime('%d.%m.%Y')
+      )
+      send("#{test_result.result_type}_graph")
+      respond_with :message, text: message, reply_markup: {
+        inline_keyboard: [[
+          { text: 'Удали запись', callback_data: "remove_test_result:#{test_result.id}" }
+        ]]
+      }
+    else
+      send_message(Message.build(:cant_recognise))
+    end
   end
 
   def callback_query(data)
