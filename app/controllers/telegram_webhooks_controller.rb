@@ -32,8 +32,8 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
       return
     end
 
-    immune_status_graph
-    viral_load_graph
+    respond_with_graph(:immune_status)
+    respond_with_graph(:viral_load)
   rescue StandardError => e
     Bugsnag.notify(e) if Rails.env.production?
     send_message(Message.build(:something_went_wrong))
@@ -56,7 +56,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
         value: test_result.value,
         date: test_result.date.strftime('%d.%m.%Y')
       )
-      send("#{test_result.result_type}_graph")
+      respond_with_graph(test_result.result_type)
       respond_with :message, text: message, reply_markup: {
         inline_keyboard: [[
           { text: 'Удали запись', callback_data: "remove_test_result:#{test_result.id}" }

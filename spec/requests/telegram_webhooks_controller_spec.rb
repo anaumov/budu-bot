@@ -51,19 +51,36 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
     end
   end
 
-  # describe '#graph!' do
-  #   context 'when user has immune status results' do
-  #   end
-  #
-  #   context 'when user has viral load results' do
-  #   end
-  # end
-  #
+  describe '#graph!' do
+    subject(:graph!) { dispatch_command(:graph, chat) }
+
+    it 'retuns no results message' do
+      graph!
+      expect(Message).to have_received(:build).with(:no_test_results)
+    end
+
+    context 'when user has test results' do
+      before do
+        create :test_result, user: user
+      end
+
+      it 'retuns no graph' do
+        expect { graph! }.to make_telegram_request(bot, :sendPhoto).exactly(2)
+      end
+    end
+  end
+
   # describe '#setup!' do
   #   context 'when user has test_results' do
   #   end
   # end
-  #
-  # describe '#help!' do
-  # end
+
+  describe '#help!' do
+    subject(:help!) { dispatch_command(:help, chat) }
+
+    it 'sends help message' do
+      help!
+      expect(Message).to have_received(:build).with(:help)
+    end
+  end
 end
