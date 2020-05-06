@@ -54,6 +54,14 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
   describe '#graph!' do
     subject(:graph!) { dispatch_command(:graph, chat) }
 
+    before do
+      graph = File.open(File.join(Rails.root, 'spec', 'fixtures', 'graph.png'))
+      # rubocop:disable RSpec/AnyInstance
+      # NOTE: it's only to speed up specs
+      allow_any_instance_of(GraphService).to receive(:render_image).and_return(graph)
+      # rubocop:enable RSpec/AnyInstance
+    end
+
     it 'retuns no results message' do
       graph!
       expect(Message).to have_received(:build).with(:no_test_results)

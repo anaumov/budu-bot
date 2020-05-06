@@ -67,7 +67,7 @@ class PillNotificationService
       text: message,
       reply_markup: { inline_keyboard: [buttons] }
     )
-    user.update!(last_notification_message_id: response.dig('result', 'message_id'))
+    user.update!(last_notification_message_id: response&.dig('result', 'message_id'))
   end
 
   def users_scope(shift)

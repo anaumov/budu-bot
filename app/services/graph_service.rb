@@ -19,7 +19,7 @@ class GraphService
   end
 
   def remove_file(file)
-    File.delete(file.path) if File.exist?(file.path)
+    File.delete(file.path) if !Rails.env.test? && File.exist?(file.path)
   end
 
   def build_points(result_type)
