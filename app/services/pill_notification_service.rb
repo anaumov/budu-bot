@@ -47,20 +47,27 @@ class PillNotificationService
 
     message = Message.build(message_slug, greeting: greeting)
     users.each do |user|
-      remove_buttons_for(user) unless message_slug == :daily_first
-      Telegram.bot.send_message(
-        chat_id: user.telegram_chat_id,
-        text: message,
-        reply_markup: { inline_keyboard: [buttons] }
-      )
+      remove_buttons_for(user)
+      send_notification(user, message)
     end
   end
 
   def remove_buttons_for(user)
-    Telegram.bot.edit_message(
+    return unless user.last_notification_message_id
+
+    Telegram.bot.edit_message_reply_markup(
       chat_id: user.telegram_chat_id,
-      reply_markup: { inline_keyboard: [] }
+      message_id: user.last_notification_message_id
     )
+  end
+
+  def send_notification(user, message)
+    response = Telegram.bot.send_message(
+      chat_id: user.telegram_chat_id,
+      text: message,
+      reply_markup: { inline_keyboard: [buttons] }
+    )
+    user.update!(last_notification_message_id: response.dig('result', 'message_id'))
   end
 
   def users_scope(shift)
