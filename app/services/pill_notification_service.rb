@@ -89,8 +89,8 @@ class PillNotificationService
 
   def buttons
     [
-      { text: 'Принял! 💪', callback_data: 'daily_pill:yes' },
-      { text: 'Не принял', callback_data: 'daily_pill:no' }
+      { text: '✅', callback_data: 'daily_pill:yes' },
+      { text: '❌', callback_data: 'daily_pill:no' }
     ]
   end
 end

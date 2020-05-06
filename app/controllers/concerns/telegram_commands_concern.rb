@@ -11,7 +11,7 @@ module TelegramCommandsConcern
     ]
     if current_user.notification_set?
       message = Message.build(:notifications_setup, time: "#{current_user.notification_time}:00")
-      buttons.push({ text: 'Выключить напоминания', callback_data: 'notifications_setup:turn_off' })
+      buttons.push({ text: 'Выключить', callback_data: 'notifications_setup:turn_off' })
     end
     message = init_message + "\n" + message if init_message.present?
     respond_with :message, text: message, reply_markup: { inline_keyboard: [buttons] }
