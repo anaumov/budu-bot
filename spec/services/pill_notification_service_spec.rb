@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 describe PillNotificationService do
   subject(:notify_users) { described_class.notify_users }
 

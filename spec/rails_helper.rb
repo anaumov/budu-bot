@@ -79,5 +79,6 @@ RSpec.configure do |config|
 
   config.after do
     DatabaseRewinder.clean
+    Telegram.bot.reset
   end
 end

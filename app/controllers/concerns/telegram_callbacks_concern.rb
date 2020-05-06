@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TelegramCallbacksConcern
-  ALLOWED_ACTIONS = %w[remove_test_result show_graph notifications_setup set_notification daily_pill].freeze
+  ALLOWED_ACTIONS = %w[remove_test_result notifications_setup set_notification daily_pill].freeze
 
   def parse_callback_data_and_response(data)
     @action, @value = data.split(':')
@@ -34,10 +34,6 @@ module TelegramCallbacksConcern
     current_user.test_results.find(value).destroy
     remove_buttons!
     send_message('Удалил')
-  end
-
-  def show_graph
-    respond_with :photo, photo: File.open(File.join(Rails.root, "#{value}_demo.png"))
   end
 
   def notifications_setup

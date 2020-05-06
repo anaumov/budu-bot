@@ -18,6 +18,10 @@ class GraphService
     kit.to_file("#{result_type}_#{user.id}.jpg")
   end
 
+  def remove_file(file)
+    File.delete(file.path) if !Rails.env.test? && File.exist?(file.path)
+  end
+
   def build_points(result_type)
     @result_type = result_type
     points
