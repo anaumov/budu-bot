@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class TestResultsFactory
-  SHORT_MATCHER = { 'в' => :viral_load, 'и' => :immune_status }.freeze
+  Error = Class.new StandardError
+
+  SHORT_MATCHER = { 'в' => 'viral_load', 'и' => 'immune_status' }.freeze
   FULL_MATCHER = {
     viral_load: %w[вн нагр вирус врус dy dbhec],
     immune_status: %w[ис иммун имун стат bc bvey]
@@ -29,7 +31,7 @@ class TestResultsFactory
       SHORT_MATCHER[identity]
     elsif identity.present?
       FULL_MATCHER.find { |_, value| value.any? { |el| identity.include?(el) } }&.first
-    end || (raise StandardError)
+    end || (raise Error)
   end
 
   def parse_value
@@ -37,6 +39,8 @@ class TestResultsFactory
   end
 
   def parse_date
+    return Date.today if message.split.size < 3
+
     date = message.split.last
     if date&.size == 8
       day, month, year = date.split(/[\.\-\:]/)

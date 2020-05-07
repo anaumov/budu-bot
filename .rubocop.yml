@@ -42,3 +42,6 @@ Metrics/BlockLength:
 
 RSpec/MultipleExpectations:
   Max: 2
+
+RSpec/NestedGroups:
+  Max: 5
