@@ -27,6 +27,7 @@ gem 'slim'
 gem 'kaminari'
 gem 'kramdown'
 gem 'simple_form'
+gem 'bugsnag'
 
 group :development, :test do
   gem 'database_rewinder'

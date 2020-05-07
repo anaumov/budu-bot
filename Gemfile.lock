@@ -75,6 +75,8 @@ GEM
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.14.3, < 2)
       sassc-rails (>= 2.0.0)
+    bugsnag (6.13.0)
+      concurrent-ruby (~> 1.0)
     builder (3.2.4)
     capistrano (3.13.0)
       airbrussh (>= 1.0.0)
@@ -380,6 +382,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.4.2)
   bootstrap
+  bugsnag
   capistrano
   capistrano-bundler
   capistrano-db-tasks
