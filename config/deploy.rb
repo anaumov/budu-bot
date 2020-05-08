@@ -7,7 +7,7 @@ set :repo_url, 'git@github.com:anaumov/budu-bot.git'
 set :branch, ENV['BRANCH'] || 'master'
 set :deploy_to, '/home/wwwbot/ikeepon'
 set :linked_files, %w[config/database.yml config/master.key]
-set :linked_dirs, %w[log tmp/pids tmp/cache tmp/sockets public/uploads public/images public/upl private/files]
+set :linked_dirs, %w[log tmp/pids tmp/cache tmp/sockets public/uploads public/images]
 
 set :puma_init_active_record, true
 set :puma_workers, 2
