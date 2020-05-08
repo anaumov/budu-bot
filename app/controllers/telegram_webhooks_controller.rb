@@ -69,7 +69,11 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     parse_callback_data_and_response(data)
   end
 
-  def action_missing(action)
-    send_message(Message.build(:unknown_command, command: action)) if command?
+  def action_missing(action, *args)
+    send_message(Message.build(:unknown_command, command: action))
+    Bugsnag.notify('Action missing') do |report|
+      report.severity = 'warning'
+      report.add_tab('Telegram request', { action: action, args: args })
+    end
   end
 end
