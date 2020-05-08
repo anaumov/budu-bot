@@ -1,24 +1,56 @@
-# README
+# Репозиторий бота «Продолжаю»
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+![Build status](https://travis-ci.com/anaumov/budu-bot.svg?branch=master)
 
-Things you may want to cover:
+### Как развернуть у себя (MacOS)
 
-* Ruby version
+Скопируйте проект с гитхаба
+```
+git clone git@github.com:anaumov/budu-bot.git
+```
 
-* System dependencies
+Установите [rbenv](https://github.com/rbenv/rbenv#installation)
+```
+brew update && brew install rbenv
+rbenv init
+```
+Установите версию руби, которая указана в проекте
+```
+cd budu-bot
+cat .ruby-version | rbenv install
+```
+Устновите бандлер и гемы
+```
+gem install bundler
+gem install rails
+rbenv rehash
+bundler install
+```
 
-* Configuration
+Установите постгрес и запустите консоль
+```
+brew install postgresql
+psql -t template1
+```
+далее в консоли постгреса
+```
+CREATE DATABASE keepon_dev;
+CREATE DATABASE keepon_test;
+\q
+```
+Создайте конфиг базы данных, запустите миграции
+```
+cp ./config/database-sample.yml ./config/database.yml
+bundle exec rake db:migrate
+```
 
-* Database creation
+[Создайте бота через @BotFather](https://t.me/BotFather), добавьте апи ключ в `secrets.yml`
+```
+cp ./config/secrets-sample.yml ./config/secrets.yml
+```
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Готово, запустите пуллер!
+```
+make poller
+rails s
+```
