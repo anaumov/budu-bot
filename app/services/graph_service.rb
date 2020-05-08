@@ -3,11 +3,13 @@
 Point = Struct.new(:x, :y)
 
 class GraphService
-  GRAPH_WIDTH = 600
-  GRAPH_HEIGHT = 400
+  MAX_ON_HEIGHT = 0.8 # max height of graph related to canvas
+  MAX_ON_WIDTH = 0.8 # max height of graph related to canvas
 
-  def initialize(user)
-    @user = user
+  def initialize(test_results:, width:, height:)
+    @test_results = test_results
+    @width = width
+    @height = height
   end
 
   def render_image(result_type)
@@ -15,40 +17,55 @@ class GraphService
     controller = ActionController::Base.new
     html = controller.render_to_string(template: 'graphs/show', locals: { points: points })
     kit = IMGKit.new(html, quality: 50)
-    kit.to_file("#{result_type}_#{user.id}.jpg")
+    kit.to_file("#{result_type}_#{results.id}.jpg")
   end
 
   def remove_file(file)
     File.delete(file.path) if !Rails.env.test? && File.exist?(file.path)
   end
 
-  def build_points(result_type)
-    @result_type = result_type
-    points
+  def immune_status
+    points(test_results.immune_status)
+  end
+
+  def viral_load
+    # points(test_results(:viral_load))
+    []
   end
 
   private
 
-  attr_reader :user, :result_type
-
-  # rubocop:disable Metrics/AbcSize
-  def points
+  attr_reader :test_results, :width, :height
+  def points(results)
     return [] if results.empty?
 
-    dates = results.pluck(:date)
-    day_resolution = (dates.count > 1 ? GRAPH_WIDTH * 0.9 / (dates.max - dates.min).to_f : GRAPH_WIDTH * 0.9 / 2)
-    values = results.pluck(:value)
-    has_non_zero = (values.uniq.count == 1 && !values.sample.zero?)
-    value_resolution = (values.count > 1 && has_non_zero ? GRAPH_HEIGHT * 0.9 / values.max.to_f : GRAPH_HEIGHT * 0.9)
+    min_date = results.pluck(:date).min
+    x_resolution = day_resolution(results)
+    y_resolution = value_resolution(results)
     results.map do |result|
-      x_coord = (result.date - dates.min) * day_resolution
-      y_coord = result.value * value_resolution
-      Point.new(x_coord.to_i, GRAPH_HEIGHT - y_coord.to_i)
+      x_coord = (result.date - min_date) * x_resolution
+      y_coord = result.value * y_resolution
+      Point.new(x_coord.to_i, height - y_coord.to_i)
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
-  def results
-    user.test_results.where(result_type: result_type).order(:date)
+  # NOTE: How many pixels in one day
+  def day_resolution(results)
+    dates = results.pluck(:date)
+    if dates.count > 1
+      width * MAX_ON_WIDTH / (dates.max - dates.min).to_f
+    else
+      width * MAX_ON_WIDTH / 2
+    end
+  end
+
+  # NOTE: How many pixels in one point
+  def value_resolution(results)
+    values = results.pluck(:value)
+    if values.count > 1 && values.any? { |v| !v.zero? }
+      height * MAX_ON_HEIGHT / values.max.to_f
+    else
+      height * MAX_ON_HEIGHT
+    end
   end
 end

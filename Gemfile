@@ -28,6 +28,7 @@ gem 'kaminari'
 gem 'kramdown'
 gem 'simple_form'
 gem 'bugsnag'
+gem 'russian'
 
 group :development, :test do
   gem 'database_rewinder'
