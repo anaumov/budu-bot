@@ -73,7 +73,7 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
       end
 
       it 'retuns no graph' do
-        expect { graph! }.to make_telegram_request(bot, :sendPhoto).exactly(2)
+        expect { graph! }.to make_telegram_request(bot, :sendPhoto)
       end
     end
   end
