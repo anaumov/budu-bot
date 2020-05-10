@@ -28,6 +28,7 @@ gem 'kaminari'
 gem 'kramdown'
 gem 'simple_form'
 gem 'bugsnag'
+gem 'russian'
 
 group :development, :test do
   gem 'database_rewinder'
@@ -49,7 +50,6 @@ group :development do
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
   gem 'overcommit', require: false
-
 
   # Deploy with capistrano
   gem 'capistrano'

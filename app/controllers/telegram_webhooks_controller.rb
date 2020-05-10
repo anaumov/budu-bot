@@ -27,15 +27,15 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def graph!(*)
-    if current_user.test_results.empty?
+    if current_user.test_results.any?
+      respond_with_graph
+    else
       send_message(Message.build(:no_test_results))
-      return
     end
-
-    respond_with_graph(:immune_status)
-    respond_with_graph(:viral_load)
   rescue StandardError => e
     Bugsnag.notify(e) if Rails.env.production?
+    raise e if Rails.env.development?
+
     send_message(Message.build(:something_went_wrong))
   end
 

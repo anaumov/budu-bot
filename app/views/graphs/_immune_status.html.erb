@@ -1,0 +1,12 @@
+<% points.each_with_index do |point, index| %>
+  <% current_point = point %>
+  <% next_point = points[index + 1] %>
+  <% if next_point.present? %>
+    <polyline
+      fill="none"
+      stroke="#00BE92"
+      stroke-width="1.5"
+      points="<%= "#{current_point.x}, #{current_point.y} #{next_point.x}, #{next_point.y}" %>"
+      />
+  <% end %>
+<% end %>

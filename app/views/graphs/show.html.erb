@@ -2,157 +2,31 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Pure Css Line Graph</title>
-    <meta name="description" content="Css Line Graph">
-    </meta>
-    <!-- link to css line graph style sheet -->
-    <style>
-      body {
-      /* background: #ccc; */
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      }
-      body, html {
-      height: 100%;
-      }
-      .graph-container {
-      position: relative;
-      }
-      .pointer-bubble {
-      position: relative;
-      left: 10.2em;
-      bottom: -3.5em;
-      opacity: 0.9;
-      }
-      .chart {
-      background: white;
-      width: 600px;
-      height: 400px;
-      border-left: 1px dotted #555;
-      border-bottom: 1px dotted #555;
-      }
-      .x-labels, .y-labels {
-      color: gray;
-      font-size: 0.7em;
-      }
-      .x-labels {
-      position: relative;
-      bottom: 0px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      }
-      .may6{
-      margin-left: 13em;
-      }
-      .may15 {
-      margin-left: 19em;
-      }
-      .y-labels {
-      position: relative;
-      bottom: 19em;
-      right: 64em;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      }
-      .y-label.spacer {
-      height: 8em;
-      }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   </head>
   <body>
-    <div class="graph-container">
-    <div class="chart-box">
-      <svg viewBox="0 0 600 400" class="chart">
+    <div class="graph">
+      <div class="graph__result graph__result--immune-status">
+        <h2 class="graph__result-title">Иммунный статус</h2>
+        <div class="graph__result-value"><%= immune_status.value %></div>
+      </div>
+      <div class="graph__result graph__result--viral-load">
+        <h2 class="graph__result-title">Вирусная нагрузка</h2>
+        <div class="graph__result-value"><%= viral_load.value %></div>
+      </div>
+      <div class="graph__date"><%= I18n.l(date, format: :long) %></div>
+      <svg viewBox="0 0 600 400" class="graph__chart">
         <defs>
           <marker id="circle" markerWidth="4" markerHeight="4" refx="2" refy="2">
             <circle cx="2" cy="2" r="2" stroke="none" fill="#3887cc"/>
           </marker>
         </defs>
-        <!-- <polygon
-          fill="#eef3f7"
-          stroke="none"
-          stroke-width="4"
-          points="
-          0, 72,
-          4, 72,
-          30, 105,
-          34, 105,
-          60, 72,
-          64, 72,
-          90, 82,
-          94, 82,
-          120, 57,
-          124, 57,
-          150, 51,
-          154, 51,
-          180, 45,
-          184, 45,
-          210, 81,
-          214, 81,
-          240, 64,
-          244, 64,
-          270, 87,
-          274, 87,
-          300, 63,
-          304, 63,
-          330, 33,
-          334, 33,
-          360, 69,
-          364, 69,
-          390, 58,
-          394, 58,
-          420, 105,
-          424, 105,
-          450, 97,
-          454, 97,
-          480, 57,
-          484, 57,
-          510, 70,
-          514, 70,
-          514, 220,
-          0, 220"
-          /> -->
-          <% points.each_with_index do |point, index| %>
-          <% current_point = point %>
-          <% next_point = points[index + 1] %>
-          <% if next_point.present? %>
-            <polyline
-              fill="none"
-              stroke="#cad7e3"
-              stroke-width="2"
-              marker-start="url(#circle)"
-              marker-end="url(#circle)"
-              points="<%= "#{current_point.x}, #{current_point.y} #{next_point.x}, #{next_point.y}" %>"
-              />
-          <% end %>
-        <% end %>
-<!--
-        <polyline
-          fill="none"
-          stroke="#cad7e3"
-          stroke-width="2"
-          marker-end="url(#circle)"
-          points="
-          484, 57
-          510, 70
-          "
-          /> -->
+        <%= render 'graphs/viral_load', points: viral_load[:points] %>
+        <%= render 'graphs/immune_status', points: immune_status[:points] %>
+        <%= render 'graphs/tredline', tredline: tredline %>
       </svg>
-      <!-- <div class="x-labels">
-        <div class="may1">May 1</div>
-        <div class="may6">May 6</div>
-        <div class="may15">May 15</div>
-        </dev>
-        <div class="y-labels">
-          <div class="y-label fifty">50</div>
-          <div class="y-label spacer"></div>
-          <div class="y-label fifteen">15</div>
-        </div>
-      </div> -->
+      <%= render 'graphs/hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
     </div>
   </body>
 </html>

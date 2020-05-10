@@ -1,54 +1,117 @@
 # frozen_string_literal: true
 
-Point = Struct.new(:x, :y)
-
 class GraphService
-  GRAPH_WIDTH = 600
-  GRAPH_HEIGHT = 400
+  Point = Struct.new(:x, :y)
+  Result = Struct.new(:points, :date, :value)
+  Tredilne = Struct.new(:a, :b)
 
-  def initialize(user)
+  MAX_ON_HEIGHT = 0.8 # max height of graph related to canvas
+  MAX_ON_WIDTH = 0.8 # max height of graph related to canvas
+
+  def initialize(user:, width:, height:)
     @user = user
+    @width = width
+    @height = height
   end
 
-  def render_image(result_type)
-    @result_type = result_type
+  # rubocop:disable Metrics/AbcSize
+  def render_image
     controller = ActionController::Base.new
-    html = controller.render_to_string(template: 'graphs/show', locals: { points: points })
-    kit = IMGKit.new(html, quality: 50)
-    kit.to_file("#{result_type}_#{user.id}.jpg")
+    result = render_data
+    html = controller.render_to_string(
+      template: 'graphs/show',
+      layout: false,
+      locals: {
+        dimentions: Point.new(width, height),
+        immune_status: result[:immune_status],
+        viral_load: result[:viral_load],
+        tredline: result[:tredline],
+        date: [result[:immune_status].date, result[:viral_load].date].max
+      }
+    )
+    kit = IMGKit.new(html, quality: 100)
+    kit.stylesheets << File.join(Rails.root, '/public/graph.css')
+    kit.to_file("current_graph_for_#{user.id}.jpg")
   end
+  # rubocop:enable Metrics/AbcSize
 
   def remove_file(file)
     File.delete(file.path) if !Rails.env.test? && File.exist?(file.path)
   end
 
-  def build_points(result_type)
-    @result_type = result_type
-    points
+  def render_data
+    immune_status_data = results_for(:immune_status)
+    {
+      immune_status: immune_status_data,
+      viral_load: results_for(:viral_load),
+      tredline: calculate_tredline(immune_status_data.points)
+    }
   end
 
   private
 
-  attr_reader :user, :result_type
+  attr_reader :user, :width, :height
 
-  # rubocop:disable Metrics/AbcSize
-  def points
+  def results_for(result_type)
+    results = test_results.where(result_type: result_type)
+    Result.new(points(results), results.last.date, results.last.value)
+  end
+
+  def test_results
+    @test_results ||= user.test_results.ordered
+  end
+
+  def points(results)
     return [] if results.empty?
 
-    dates = results.pluck(:date)
-    day_resolution = (dates.count > 1 ? GRAPH_WIDTH * 0.9 / (dates.max - dates.min).to_f : GRAPH_WIDTH * 0.9 / 2)
-    values = results.pluck(:value)
-    has_non_zero = (values.uniq.count == 1 && !values.sample.zero?)
-    value_resolution = (values.count > 1 && has_non_zero ? GRAPH_HEIGHT * 0.9 / values.max.to_f : GRAPH_HEIGHT * 0.9)
+    min_date = results.pluck(:date).min
+    x_resolution = day_resolution(results)
+    y_resolution = value_resolution(results)
     results.map do |result|
-      x_coord = (result.date - dates.min) * day_resolution
-      y_coord = result.value * value_resolution
-      Point.new(x_coord.to_i, GRAPH_HEIGHT - y_coord.to_i)
+      x_coord = (result.date - min_date) * x_resolution
+      y_coord = result.value * y_resolution
+      Point.new(x_coord.to_i, height - y_coord.to_i)
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
-  def results
-    user.test_results.where(result_type: result_type).order(:date)
+  # NOTE: How many pixels in one day
+  def day_resolution(results)
+    dates = results.pluck(:date)
+    if dates.count > 1
+      width * MAX_ON_WIDTH / (dates.max - dates.min).to_f
+    else
+      width * MAX_ON_WIDTH / 2
+    end
+  end
+
+  # NOTE: How many pixels in one point
+  def value_resolution(results)
+    values = results.pluck(:value)
+    if values.count > 1 && values.any? { |v| !v.zero? }
+      height * MAX_ON_HEIGHT / values.max.to_f
+    else
+      height * MAX_ON_HEIGHT
+    end
+  end
+
+  # Formula https://math.stackexchange.com/questions/204020
+  def calculate_tredline(points)
+    a = numerator(points) / denominator(points).to_f
+    Tredilne.new(a, calculate_b(points, a))
+  end
+
+  def denominator(points)
+    denominator = points.size * points.map { |p| p.x**2 }.sum
+    denominator - points.map(&:x).sum**2
+  end
+
+  def numerator(points)
+    numerator = points.size * points.map { |p| p.x * p.y }.sum
+    numerator - points.map(&:x).sum * points.map(&:y).sum
+  end
+
+  def calculate_b(points, a) # rubocop:disable Naming/MethodParameterName
+    numerator = points.map(&:y).sum - a * points.map(&:x).sum
+    numerator / points.size.to_f
   end
 end
