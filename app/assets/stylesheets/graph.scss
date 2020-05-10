@@ -1,0 +1,51 @@
+$green: #00BE92;
+$black: #020202;
+
+body {
+  background: #e8e8e8;
+}
+
+.graph {
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  width: 600px;
+  height: 400px;
+  margin: 0 auto;
+  background: white;
+
+  &__result {
+    position: absolute;
+    top: 6px;
+
+    &-title {
+      font-size: 20px;
+      margin: 0;
+    }
+    &-value {
+      font-size: 60px;
+      line-height: 56px;
+    }
+    &--immune-status {
+      color: $green;
+      left: 6px;
+    }
+    &--viral-load {
+      left: 216px;
+    }
+  }
+
+  &__text {
+    font-size: 15px;
+    line-height: 0;
+  }
+  &__date {
+    font-size: 20px;
+    position: absolute;
+    right: 6px;
+    top: 6px;
+  }
+  &__chartbox {
+    width: 600px;
+    height: 400px;
+  }
+}

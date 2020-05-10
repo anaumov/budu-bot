@@ -2,38 +2,30 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   </head>
   <body>
     <div class="graph">
       <div class="graph__result graph__result--immune-status">
         <h2 class="graph__result-title">Иммунный статус</h2>
-        <div class="graph__result-value"><%= immune_status[:value] %></div>
+        <div class="graph__result-value"><%= immune_status.value %></div>
       </div>
       <div class="graph__result graph__result--viral-load">
         <h2 class="graph__result-title">Вирусная нагрузка</h2>
-        <div class="graph__result-value">0</div>
+        <div class="graph__result-value"><%= viral_load.value %></div>
       </div>
       <div class="graph__date"><%= I18n.l(date, format: :long) %></div>
-
       <svg viewBox="0 0 600 400" class="graph__chart">
         <defs>
           <marker id="circle" markerWidth="4" markerHeight="4" refx="2" refy="2">
             <circle cx="2" cy="2" r="2" stroke="none" fill="#3887cc"/>
           </marker>
         </defs>
-          <%= render 'immune_status', points: immune_status[:points] %>
+        <%= render 'viral_load', points: viral_load[:points] %>
+        <%= render 'immune_status', points: immune_status[:points] %>
+        <%= render 'tredline', tredline: tredline %>
       </svg>
-      <!-- <div class="x-labels">
-        <div class="may1">May 1</div>
-        <div class="may6">May 6</div>
-        <div class="may15">May 15</div>
-        </dev>
-        <div class="y-labels">
-          <div class="y-label fifty">50</div>
-          <div class="y-label spacer"></div>
-          <div class="y-label fifteen">15</div>
-        </div>
-      </div> -->
     </div>
   </body>
 </html>
