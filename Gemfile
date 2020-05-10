@@ -51,7 +51,6 @@ group :development do
   gem 'rubocop-rspec', require: false
   gem 'overcommit', require: false
 
-
   # Deploy with capistrano
   gem 'capistrano'
   gem 'capistrano-rails'

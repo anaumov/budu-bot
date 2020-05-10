@@ -14,12 +14,26 @@ class GraphService
     @height = height
   end
 
+  # rubocop:disable Metrics/AbcSize
   def render_image
     controller = ActionController::Base.new
-    html = controller.render_to_string(template: 'graphs/show', locals: { points: points })
-    kit = IMGKit.new(html, quality: 50)
-    kit.to_file("#{result_type}_#{results.id}.jpg")
+    result = render_data
+    html = controller.render_to_string(
+      template: 'graphs/show',
+      layout: false,
+      locals: {
+        dimentions: Point.new(width, height),
+        immune_status: result[:immune_status],
+        viral_load: result[:viral_load],
+        tredline: result[:tredline],
+        date: [result[:immune_status].date, result[:viral_load].date].max
+      }
+    )
+    kit = IMGKit.new(html, quality: 100)
+    kit.stylesheets << File.join(Rails.root, '/public/graph.css')
+    kit.to_file("current_graph_for_#{user.id}.jpg")
   end
+  # rubocop:enable Metrics/AbcSize
 
   def remove_file(file)
     File.delete(file.path) if !Rails.env.test? && File.exist?(file.path)

@@ -1,16 +1,11 @@
 $green: #00BE92;
 $black: #020202;
 
-body {
-  background: #e8e8e8;
-}
-
 .graph {
   font-family: 'Montserrat', sans-serif;
   position: relative;
   width: 600px;
   height: 400px;
-  margin: 0 auto;
   background: white;
 
   &__result {

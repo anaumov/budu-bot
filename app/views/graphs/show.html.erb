@@ -22,10 +22,11 @@
             <circle cx="2" cy="2" r="2" stroke="none" fill="#3887cc"/>
           </marker>
         </defs>
-        <%= render 'viral_load', points: viral_load[:points] %>
-        <%= render 'immune_status', points: immune_status[:points] %>
-        <%= render 'tredline', tredline: tredline %>
+        <%= render 'graphs/viral_load', points: viral_load[:points] %>
+        <%= render 'graphs/immune_status', points: immune_status[:points] %>
+        <%= render 'graphs/tredline', tredline: tredline %>
       </svg>
+      <%= render 'graphs/hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
     </div>
   </body>
 </html>
