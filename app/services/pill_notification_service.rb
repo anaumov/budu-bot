@@ -13,9 +13,8 @@ class PillNotificationService
   def notify_users
     notify_current_hour
     notify_prev_hour
-    nofity_prev_two_hours
-    notify_prev_three_hours
     notify_undone_message
+    undone_and_notify
   end
 
   private
@@ -30,25 +29,24 @@ class PillNotificationService
     send_messages(users: users_scope(1), message_slug: :daily_second)
   end
 
-  def nofity_prev_two_hours
-    send_messages(users: users_scope(2), message_slug: :daily_third)
-  end
-
-  def notify_prev_three_hours
-    send_messages(users: users_scope(3), message_slug: :daily_four)
-  end
-
   def notify_undone_message
-    send_messages(users: users_scope(4), message_slug: :daily_undone)
+    send_messages(users: users_scope(2), message_slug: :daily_undone)
+  end
+
+  def undone_and_notify
+    users = users_scope(3)
+    send_messages(users: users, message_slug: :undone)
+    users.each(&:pill_undone!)
   end
 
   def send_messages(users:, message_slug:)
     return if users.empty?
 
     message = Message.build(message_slug, greeting: greeting)
+    buttons = buttons_for(message_slug)
     users.each do |user|
       remove_buttons_for(user)
-      send_notification(user, message)
+      send_notification(user: user, message: message, buttons: buttons)
     end
   end
 
@@ -61,7 +59,7 @@ class PillNotificationService
     )
   end
 
-  def send_notification(user, message)
+  def send_notification(user:, message:, buttons:)
     response = Telegram.bot.send_message(
       chat_id: user.telegram_chat_id,
       text: message,
@@ -87,10 +85,11 @@ class PillNotificationService
     end
   end
 
-  def buttons
-    [
-      { text: '✅', callback_data: 'daily_pill:yes' },
-      { text: '❌', callback_data: 'daily_pill:no' }
-    ]
+  def buttons_for(message_slug)
+    if message_slug == :undone
+      []
+    else
+      [{ text: '✅', callback_data: 'daily_pill:yes' }, { text: '❌', callback_data: 'daily_pill:no' }]
+    end
   end
 end

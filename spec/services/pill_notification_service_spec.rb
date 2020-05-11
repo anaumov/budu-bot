@@ -5,10 +5,11 @@ describe PillNotificationService do
 
   let(:bot) { Telegram.bot }
   let(:current_hour) { Time.zone.now.hour }
+  let(:user) { create(:user, notification_time: hour) }
 
   before do
-    create(:user, notification_time: hour)
-    allow(Message).to receive(:build).and_return(double)
+    user
+    allow(Message).to receive(:build).and_return(instance_double('Message', slug: :test))
     allow(bot).to receive(:send_message)
   end
 
@@ -47,28 +48,32 @@ describe PillNotificationService do
 
     it 'sends third message to user' do
       notify_users
-      expect(Message).to have_received(:build).with(:daily_third, any_args)
-      expect(bot).to have_received(:send_message)
-    end
-  end
-
-  context 'when user didnt get a pill 3 hours ago' do
-    let(:hour) { current_hour - 3 }
-
-    it 'sends fourth message to user' do
-      notify_users
-      expect(Message).to have_received(:build).with(:daily_four, any_args)
-      expect(bot).to have_received(:send_message)
-    end
-  end
-
-  context 'when user didnt get a pill 5 hours ago' do
-    let(:hour) { current_hour - 4 }
-
-    it 'sends undone message to user' do
-      notify_users
       expect(Message).to have_received(:build).with(:daily_undone, any_args)
       expect(bot).to have_received(:send_message)
+    end
+  end
+
+  context 'when user didnt get a pill 4 hours ago' do
+    let(:hour) { current_hour - 3 }
+
+    it 'build undone message' do
+      notify_users
+      expect(Message).to have_received(:build).with(:undone, any_args)
+    end
+
+    it 'sends message' do
+      notify_users
+      expect(bot).to have_received(:send_message)
+    end
+
+    it 'creates user_action' do
+      expect { notify_users }.to change(UserAction, :count).from(0).to(1)
+    end
+
+    it 'creates undone action' do
+      notify_users
+      action = UserAction.last
+      expect(action).to have_attributes(user: user, action_type: 'pill_undone')
     end
   end
 end
