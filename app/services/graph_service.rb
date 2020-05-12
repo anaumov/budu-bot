@@ -15,7 +15,7 @@ class GraphService
   end
 
   def render_image
-    kit = IMGKit.new(render_html, quality: 100)
+    kit = IMGKit.new(render_html, quality: 100, width: 600, height: 400)
     kit.stylesheets << File.join(Rails.root, '/public/graph.css')
     kit.to_file("current_graph_for_#{user.id}.jpg")
   end
