@@ -34,6 +34,7 @@
         <% else %>
           <%= render 'graphs/rising_hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
         <% end %>
+        <%= render 'graphs/immune_status_interval', interval: immune_status_interval %>
         <%= render 'graphs/label', type: 'viral_load', data: viral_load %>
         <%= render 'graphs/label', type: 'immune_status', data: immune_status %>
       </div>

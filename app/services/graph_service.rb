@@ -6,6 +6,7 @@ class GraphService
 
   MAX_ON_HEIGHT = 0.8 # max height of graph related to canvas
   MAX_ON_WIDTH = 0.8 # max height of graph related to canvas
+  IMMUNE_STATUS_INTERVAL = { bottom: 400, top: 1200 }.freeze
 
   def initialize(user:, width:, height:)
     @user = user
@@ -33,6 +34,7 @@ class GraphService
       immune_status: immune_status_data,
       viral_load: viral_load_data,
       tredline: immune_status_tredline,
+      immune_status_interval: immune_status_interval,
       date: [immune_status_data.date, viral_load_data.date].max
     }
   end
@@ -56,6 +58,11 @@ class GraphService
 
   def test_results
     @test_results ||= user.test_results.ordered
+  end
+
+  def immune_status_interval
+    resolution = value_resolution(test_results.immune_status)
+    [IMMUNE_STATUS_INTERVAL[:bottom] * resolution, IMMUNE_STATUS_INTERVAL[:top] * resolution]
   end
 
   def points(results)
@@ -84,6 +91,7 @@ class GraphService
   # NOTE: How many pixels in one point
   def value_resolution(results)
     values = results.pluck(:value)
+    values.push(IMMUNE_STATUS_INTERVAL[:top]) if results.take.immune_status?
     if values.count > 1 && values.any? { |v| !v.zero? }
       height * MAX_ON_HEIGHT / values.max.to_f
     else
