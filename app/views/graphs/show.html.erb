@@ -7,26 +7,32 @@
   </head>
   <body>
     <div class="graph">
-      <div class="graph__result graph__result--immune-status">
-        <h2 class="graph__result-title">Иммунный статус</h2>
-        <div class="graph__result-value"><%= immune_status.value %></div>
+      <div class="graph__header">
+        <div class="graph__result graph__result--immune-status">
+          <h2 class="graph__result-title">Иммунный статус</h2>
+          <div class="graph__result-value"><%= immune_status.value %></div>
+        </div>
+        <div class="graph__result graph__result--viral-load">
+          <h2 class="graph__result-title">Вирусная нагрузка</h2>
+          <div class="graph__result-value"><%= viral_load.value %></div>
+        </div>
+        <div class="graph__date"><%= I18n.l(date, format: :long) %></div>
       </div>
-      <div class="graph__result graph__result--viral-load">
-        <h2 class="graph__result-title">Вирусная нагрузка</h2>
-        <div class="graph__result-value"><%= viral_load.value %></div>
+      <div class="graph__body">
+        <svg viewBox="0 0 600 300" class="graph__chart">
+          <defs>
+            <marker id="circle" markerWidth="4" markerHeight="4" refx="2" refy="2">
+              <circle cx="2" cy="2" r="2" stroke="none" fill="#3887cc"/>
+            </marker>
+          </defs>
+          <%= render 'graphs/viral_load', points: viral_load.points %>
+          <%= render 'graphs/immune_status', points: immune_status.points %>
+          <%= render 'graphs/tredline', tredline: tredline %>
+        </svg>
+        <%= render 'graphs/hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
+        <%= render 'graphs/label', type: 'viral_load', data: viral_load %>
+        <%= render 'graphs/label', type: 'immune_status', data: immune_status %>
       </div>
-      <div class="graph__date"><%= I18n.l(date, format: :long) %></div>
-      <svg viewBox="0 0 600 400" class="graph__chart">
-        <defs>
-          <marker id="circle" markerWidth="4" markerHeight="4" refx="2" refy="2">
-            <circle cx="2" cy="2" r="2" stroke="none" fill="#3887cc"/>
-          </marker>
-        </defs>
-        <%= render 'graphs/viral_load', points: viral_load[:points] %>
-        <%= render 'graphs/immune_status', points: immune_status[:points] %>
-        <%= render 'graphs/tredline', tredline: tredline %>
-      </svg>
-      <%= render 'graphs/hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
     </div>
   </body>
 </html>

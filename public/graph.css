@@ -373,50 +373,65 @@ template {
 }
 
 /* line 4, app/assets/stylesheets/graph.scss */
+html, body {
+  width: 600px;
+  height: 400px;
+  margin: 0;
+}
+
+/* line 10, app/assets/stylesheets/graph.scss */
 .graph {
   font-family: 'Montserrat', sans-serif;
   position: relative;
   width: 600px;
   height: 400px;
   background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* line 11, app/assets/stylesheets/graph.scss */
+/* line 20, app/assets/stylesheets/graph.scss */
+.graph__body {
+  position: relative;
+}
+
+/* line 24, app/assets/stylesheets/graph.scss */
 .graph__result {
   position: absolute;
   top: 6px;
 }
 
-/* line 15, app/assets/stylesheets/graph.scss */
+/* line 28, app/assets/stylesheets/graph.scss */
 .graph__result-title {
   font-size: 20px;
   margin: 0;
 }
 
-/* line 19, app/assets/stylesheets/graph.scss */
+/* line 32, app/assets/stylesheets/graph.scss */
 .graph__result-value {
   font-size: 60px;
   line-height: 56px;
 }
 
-/* line 23, app/assets/stylesheets/graph.scss */
+/* line 36, app/assets/stylesheets/graph.scss */
 .graph__result--immune-status {
   color: #00BE92;
   left: 6px;
 }
 
-/* line 27, app/assets/stylesheets/graph.scss */
+/* line 40, app/assets/stylesheets/graph.scss */
 .graph__result--viral-load {
   left: 216px;
 }
 
-/* line 32, app/assets/stylesheets/graph.scss */
+/* line 45, app/assets/stylesheets/graph.scss */
 .graph__text {
   font-size: 15px;
   line-height: 0;
 }
 
-/* line 36, app/assets/stylesheets/graph.scss */
+/* line 49, app/assets/stylesheets/graph.scss */
 .graph__date {
   font-size: 20px;
   position: absolute;
@@ -424,10 +439,21 @@ template {
   top: 6px;
 }
 
-/* line 42, app/assets/stylesheets/graph.scss */
+/* line 55, app/assets/stylesheets/graph.scss */
 .graph__chartbox {
   width: 600px;
   height: 400px;
 }
 
-/*# sourceMappingURL=application.css-f57083282ba85c7687679210ca2eb1fa9ef9d130566ac0a7c23dd9174f6e2afe.map */
+/* line 59, app/assets/stylesheets/graph.scss */
+.graph__label {
+  position: absolute;
+  transform: translate3d(-50%, -100%, 0);
+}
+
+/* line 63, app/assets/stylesheets/graph.scss */
+.graph__label--immune_status {
+  color: #00BE92;
+}
+
+/*# sourceMappingURL=application.css-435793a4048ff5913de42b79e77d91ef19d3ee373ea2d88adbe2acf3665c8c96.map */
