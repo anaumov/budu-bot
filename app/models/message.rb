@@ -8,12 +8,11 @@ class Message < ApplicationRecord
     I18n.interpolate(message.text, **args)
   end
 
-  def self.test_result_message(test_result)
-    build(
-      :result_saved,
-      result_type: test_result.ru_result_type.capitalize,
-      value: test_result.value,
-      date: test_result.date.strftime('%d.%m.%Y')
-    )
+  def self.test_result_message(results)
+    report = results.map do |result|
+      result_message = (result[:result].present? ? 'сохранено' : 'не удалось распознать')
+      "#{result[:message]} - #{result_message}"
+    end
+    build(:result_saved, report: report.join("\n"))
   end
 end

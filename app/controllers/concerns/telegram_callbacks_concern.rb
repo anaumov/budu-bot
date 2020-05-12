@@ -31,9 +31,9 @@ module TelegramCallbacksConcern
   end
 
   def remove_test_result
-    current_user.test_results.find(value).destroy
+    current_user.test_results.where(id: value.split(',')).destroy_all
     remove_buttons!
-    send_message('Удалил')
+    send_message('Удалено')
   end
 
   def notifications_setup

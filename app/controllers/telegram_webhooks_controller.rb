@@ -48,22 +48,15 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def message(message)
-    test_result = TestResultsFactory.new(current_user, message['text']).create_test_result!
-    message = Message.test_result_message(test_result)
-    respond_with :message, text: 'Готовлю график...'
-    respond_with_graph
+    results = TestResultsFactory.perform(current_user, message['text'])
+    message = Message.test_result_message(results)
+    ids = results.map { |el| el[:result]&.id }.compact
     respond_with :message, text: message, reply_markup: {
       inline_keyboard: [[
-        { text: 'Удали запись', callback_data: "remove_test_result:#{test_result.id}" }
+        { text: 'Отменить запись', callback_data: "remove_test_result:#{ids.join(',')}" }
       ]]
     }
-  rescue StandardError => e
-    raise e if Rails.env.development?
-
-    Bugsnag.notify(e) do |report|
-      report.add_tab('Message', { message: message['text'] })
-    end
-    send_message(Message.build(:cant_recognise))
+    respond_with_graph
   end
 
   def callback_query(data)

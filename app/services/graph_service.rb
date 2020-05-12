@@ -54,7 +54,7 @@ class GraphService
 
   def results_for(result_type)
     results = test_results.where(result_type: result_type)
-    Result.new(points(results), results.last.date, results.last.value)
+    Result.new(points(results), results.last&.date, results.last&.value)
   end
 
   def test_results

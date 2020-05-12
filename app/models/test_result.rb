@@ -8,4 +8,12 @@ class TestResult < ApplicationRecord
   def ru_result_type
     I18n.t(result_type, scope: %i[test_result result_type])
   end
+
+  def dec_date
+    I18n.t(date, format: '%d.%m.%Y')
+  end
+
+  def message_view
+    "#{ru_result_type.capitalize} #{value} #{dec_date}"
+  end
 end

@@ -2,46 +2,40 @@
 
 describe TestResultsFactory do
   describe '#create_test_result!' do
-    subject(:factory_action) { described_class.new(user, message).create_test_result! }
+    subject(:create_test_result) { described_class.perform(user, message) }
 
     let(:user) { create :user }
-    let(:message_attributes) { { result_type: 'viral_load', value: 100, date: Date.new(2006, 8, 12) } }
-    let(:message) { "В #{message_attributes[:value]} #{message_attributes[:date].strftime('%d.%m.%Y')}" }
+    let(:message) { 'В 400 10.10.2020' }
 
-    it 'creates test result' do
-      expect(factory_action).to have_attributes(message_attributes)
+    it 'creates test_result' do
+      expect { create_test_result }.to change(TestResult, :count).from(0).to(1)
     end
 
-    context 'when date is invalid' do
-      let(:message_attributes) { { result_type: 'viral_load', value: 100, date: Date.today } }
-      let(:message) { "В #{message_attributes[:value]} test" }
-
-      it 'creates test result for today' do
-        expect(factory_action).to have_attributes(message_attributes)
-      end
-
-      context 'when date is missed' do
-        let(:message) { "В #{message_attributes[:value]}" }
-
-        it 'creates test result for today' do
-          expect(factory_action).to have_attributes(message_attributes)
-        end
-      end
+    it 'responds with test_result' do
+      expect(create_test_result).to include(message: message, result: a_kind_of(TestResult))
     end
 
-    context 'when message without shorthand' do
-      let(:message) { "вирусная нагрузка #{message_attributes[:value]} #{message_attributes[:date].strftime('%d.%m.%Y')}" }
-
-      it 'creates test result for today' do
-        expect(factory_action).to have_attributes(message_attributes)
-      end
-    end
-
-    context 'when message invalid' do
+    context 'when message is invalid' do
       let(:message) { 'test' }
 
-      it 'raises an error' do
-        expect { factory_action }.to raise_error(TestResultsFactory::Error)
+      it 'responds with nil' do
+        expect(create_test_result).to include(message: message, result: nil)
+      end
+    end
+
+    context 'when multi line message' do
+      let(:message) { "В 400 10.10.2020\nИ 400 11.10.2020\nВ 400 12.10.2020" }
+
+      it 'creates test_results' do
+        expect { create_test_result }.to change(TestResult, :count).from(0).to(3)
+      end
+
+      context 'when one row is invalid' do
+        let(:message) { "В 400 10.10.2020\ntest\nВ 400 12.10.2020" }
+
+        it 'responds with nil' do
+          expect(create_test_result).to include({ message: 'test', result: nil })
+        end
       end
     end
   end
