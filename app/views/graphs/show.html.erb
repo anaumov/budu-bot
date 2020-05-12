@@ -29,7 +29,11 @@
           <%= render 'graphs/immune_status', points: immune_status.points %>
           <%= render 'graphs/tredline', tredline: tredline %>
         </svg>
-        <%= render 'graphs/hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
+        <% if tredline.a.positive? %>
+          <%= render 'graphs/falling_hero', x: 510, y: tredline.a * 510 + tredline.b - 8 %>
+        <% else %>
+          <%= render 'graphs/rising_hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
+        <% end %>
         <%= render 'graphs/label', type: 'viral_load', data: viral_load %>
         <%= render 'graphs/label', type: 'immune_status', data: immune_status %>
       </div>
