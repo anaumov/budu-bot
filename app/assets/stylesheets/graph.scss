@@ -12,12 +12,13 @@ html, body {
   width: 600px;
   height: 400px;
   background: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  &__header {
+    height: 100px;
+  }
 
   &__body {
     position: relative;
+    height: 300px;
   }
 
   &__result {
@@ -38,6 +39,7 @@ html, body {
     }
     &--viral-load {
       left: 216px;
+      min-width: 210px;
     }
   }
 
@@ -58,7 +60,7 @@ html, body {
 
   &__label {
     position: absolute;
-    // transform: translate3d(-50%, -100%, 0);
+    white-space: nowrap;
   }
 
   &__label--immune_status {

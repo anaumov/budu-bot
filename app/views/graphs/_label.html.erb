@@ -1,7 +1,7 @@
 <% if data.points.any? %>
-  <%- max_point = data.points.min { |p| p.y } %>
+  <%- max_point = data.points.min { |a, b| a.y <=> b.y } %>
   <div
     class="graph__label graph__label--<%= type %>"
-    style="<%= "left:#{max_point.x - 50 > 0 ? max_point.x - 50 : max_point.x}px;top:#{max_point.y - 18}px" %>"
+    style="<%= "left:#{max_point.x - 30 > 0 ? max_point.x - 30 : max_point.x}px;top:#{max_point.y - 18}px" %>"
   >Макс. <%= data.max %></div>
 <% end %>

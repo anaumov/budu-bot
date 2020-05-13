@@ -386,52 +386,56 @@ html, body {
   width: 600px;
   height: 400px;
   background: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+}
+
+/* line 15, app/assets/stylesheets/graph.scss */
+.graph__header {
+  height: 100px;
 }
 
 /* line 19, app/assets/stylesheets/graph.scss */
 .graph__body {
   position: relative;
+  height: 300px;
 }
 
-/* line 23, app/assets/stylesheets/graph.scss */
+/* line 24, app/assets/stylesheets/graph.scss */
 .graph__result {
   position: absolute;
   top: 6px;
 }
 
-/* line 27, app/assets/stylesheets/graph.scss */
+/* line 28, app/assets/stylesheets/graph.scss */
 .graph__result-title {
   font-size: 20px;
   margin: 0;
 }
 
-/* line 31, app/assets/stylesheets/graph.scss */
+/* line 32, app/assets/stylesheets/graph.scss */
 .graph__result-value {
   font-size: 60px;
   line-height: 56px;
 }
 
-/* line 35, app/assets/stylesheets/graph.scss */
+/* line 36, app/assets/stylesheets/graph.scss */
 .graph__result--immune-status {
   color: #00BE92;
   left: 6px;
 }
 
-/* line 39, app/assets/stylesheets/graph.scss */
+/* line 40, app/assets/stylesheets/graph.scss */
 .graph__result--viral-load {
   left: 216px;
+  min-width: 210px;
 }
 
-/* line 44, app/assets/stylesheets/graph.scss */
+/* line 46, app/assets/stylesheets/graph.scss */
 .graph__text {
   font-size: 15px;
   line-height: 0;
 }
 
-/* line 48, app/assets/stylesheets/graph.scss */
+/* line 50, app/assets/stylesheets/graph.scss */
 .graph__date {
   font-size: 20px;
   position: absolute;
@@ -439,27 +443,28 @@ html, body {
   top: 6px;
 }
 
-/* line 54, app/assets/stylesheets/graph.scss */
+/* line 56, app/assets/stylesheets/graph.scss */
 .graph__chartbox {
   width: 600px;
   height: 400px;
 }
 
-/* line 59, app/assets/stylesheets/graph.scss */
+/* line 61, app/assets/stylesheets/graph.scss */
 .graph__label {
   position: absolute;
+  white-space: nowrap;
 }
 
-/* line 64, app/assets/stylesheets/graph.scss */
+/* line 66, app/assets/stylesheets/graph.scss */
 .graph__label--immune_status {
   color: #00BE92;
 }
 
-/* line 67, app/assets/stylesheets/graph.scss */
+/* line 69, app/assets/stylesheets/graph.scss */
 .graph__interval {
   position: absolute;
   width: 100%;
   background: rgba(0, 190, 146, 0.1);
 }
 
-/*# sourceMappingURL=application.css-c4e995cc1d7a8a1041ebdcc76d7ebc94e7d373b2bb3dd1606e1051ecb09f8c24.map */
+/*# sourceMappingURL=application.css-b36148b68d55712d98c0754ee74a1998eccf7865c720a26bb25974f7f90ff965.map */

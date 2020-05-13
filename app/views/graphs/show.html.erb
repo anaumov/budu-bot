@@ -29,8 +29,8 @@
               <circle cx="2" cy="2" r="2" stroke="none" fill="#3887cc"/>
             </marker>
           </defs>
-          <%= render 'graphs/viral_load', points: viral_load.points %>
-          <%= render 'graphs/immune_status', points: immune_status.points %>
+          <%= render('graphs/viral_load', points: viral_load.points) if viral_load.points.any? %>
+          <%= render('graphs/immune_status', points: immune_status.points) if immune_status.points.any? %>
           <%= render('graphs/tredline', tredline: tredline) if immune_status.points.any? %>
         </svg>
         <% if immune_status.value.present? %>
