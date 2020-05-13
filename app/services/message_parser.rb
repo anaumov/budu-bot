@@ -42,12 +42,9 @@ class MessageParser
     return Date.today if message.split.size < 3
 
     date = message.split.last
-    if date&.size == 8
-      day, month, year = date.split(/[\.\-\:]/)
-      Date.parse("#{day}.#{month}.20#{year}")
-    elsif date.present?
-      Date.parse(date)
-    end
+    day, month, year = date.split(/[\.\-\:]/)
+    year = "20#{year}" if year&.size == 2
+    Date.parse("#{day}.#{month}.#{year}")
   rescue Date::Error
     Date.today
   end

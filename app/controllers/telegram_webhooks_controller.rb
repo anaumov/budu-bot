@@ -53,7 +53,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     ids = results.map { |el| el[:result]&.id }.compact
     respond_with :message, text: message, reply_markup: {
       inline_keyboard: [[
-        { text: 'Отменить запись', callback_data: "remove_test_result:#{ids.join(',')}" }
+        { text: 'Отменить запись', callback_data: "remove_test_result:#{ids.first}-#{ids.last}}" }
       ]]
     }
     respond_with_graph

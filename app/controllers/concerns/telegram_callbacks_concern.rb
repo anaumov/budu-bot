@@ -31,7 +31,9 @@ module TelegramCallbacksConcern
   end
 
   def remove_test_result
-    current_user.test_results.where(id: value.split(',')).destroy_all
+    from, to = value.split('-').map(&:to_i)
+    range = from.present? && to.present? ? (from..to) : from
+    current_user.test_results.where(id: range).destroy_all
     remove_buttons!
     send_message('Удалено')
   end

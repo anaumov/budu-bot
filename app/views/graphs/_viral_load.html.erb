@@ -3,15 +3,11 @@
   stroke="none"
   stroke-width="4"
   points="
-    <%= "0, 400" %>
-    <% points.each_with_index do |point, index| %>
-      <% current_point = point %>
-      <% next_point = points[index + 1] %>
-      <% if next_point.present? %>
-        <%= "#{current_point.x}, #{current_point.y}, #{next_point.x}, #{next_point.y}" %>
-      <% else %>
-        <%= "#{current_point.x}, 400" %>
-      <% end %>
+    0, 300
+    <% points.each_with_index do |point| %>
+      <%= "#{point.x}, #{point.y - 10}," %>
     <% end %>
+    <%= "#{points.last.x}, 300," %>
+    0, 300
   "
-/>
+/> %>

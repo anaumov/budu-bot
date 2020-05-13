@@ -35,7 +35,7 @@ class GraphService
       viral_load: viral_load_data,
       tredline: immune_status_tredline,
       immune_status_interval: immune_status_interval,
-      date: [immune_status_data.date, viral_load_data.date].max
+      date: [immune_status_data&.date, viral_load_data&.date].compact.max
     }
   end
 
@@ -61,6 +61,8 @@ class GraphService
   end
 
   def immune_status_interval
+    return [] if test_results.immune_status.empty?
+
     resolution = value_resolution(test_results.immune_status)
     [IMMUNE_STATUS_INTERVAL[:bottom] * resolution, IMMUNE_STATUS_INTERVAL[:top] * resolution]
   end
@@ -91,7 +93,7 @@ class GraphService
   # NOTE: How many pixels in one point
   def value_resolution(results)
     values = results.pluck(:value)
-    values.push(IMMUNE_STATUS_INTERVAL[:top]) if results.take.immune_status?
+    values.push(IMMUNE_STATUS_INTERVAL[:top]) if results.take&.immune_status?
     if values.count > 1 && values.any? { |v| !v.zero? }
       height * MAX_ON_HEIGHT / values.max.to_f
     else

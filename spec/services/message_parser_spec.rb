@@ -4,11 +4,19 @@ describe MessageParser do
   describe '#create_test_result!' do
     subject(:parse_message) { described_class.perform(message) }
 
-    let(:message_attrs) { { result_type: 'viral_load', value: 100, date: Date.new(2006, 8, 12) } }
+    let(:message_attrs) { { result_type: 'viral_load', value: 100, date: Date.new(2006, 8, 6) } }
     let(:message) { "В #{message_attrs[:value]} #{message_attrs[:date].strftime('%d.%m.%Y')}" }
 
     it 'resurn array of results' do
       expect(parse_message).to include(message_attrs[:result_type], message_attrs[:value], message_attrs[:date])
+    end
+
+    context 'when day and month are one digit' do
+      let(:message) { "В #{message_attrs[:value]} #{message_attrs[:date].strftime('%-d-%-m-%Y')}" }
+
+      it 'creates test result' do
+        expect(parse_message).to include(message_attrs[:result_type], message_attrs[:value], message_attrs[:date])
+      end
     end
 
     context 'when date is invalid' do

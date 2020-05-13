@@ -10,10 +10,10 @@ class TestResult < ApplicationRecord
   end
 
   def dec_date
-    I18n.t(date, format: '%d.%m.%Y')
+    I18n.l(date, format: '%d.%m.%Y')
   end
 
   def message_view
-    "#{ru_result_type.capitalize} #{value} #{dec_date}"
+    "#{ru_result_type.capitalize} #{value} на #{dec_date}"
   end
 end

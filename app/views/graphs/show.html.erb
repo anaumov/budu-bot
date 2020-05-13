@@ -8,14 +8,18 @@
   <body>
     <div class="graph">
       <div class="graph__header">
-        <div class="graph__result graph__result--immune-status">
-          <h2 class="graph__result-title">Иммунный статус</h2>
-          <div class="graph__result-value"><%= immune_status.value %></div>
-        </div>
-        <div class="graph__result graph__result--viral-load">
-          <h2 class="graph__result-title">Вирусная нагрузка</h2>
-          <div class="graph__result-value"><%= viral_load.value %></div>
-        </div>
+        <% if immune_status.value.present? %>
+          <div class="graph__result graph__result--immune-status">
+            <h2 class="graph__result-title">Иммунный статус</h2>
+            <div class="graph__result-value"><%= immune_status.value %></div>
+          </div>
+        <% end %>
+        <% if viral_load.value.present? %>
+          <div class="graph__result graph__result--viral-load">
+            <h2 class="graph__result-title">Вирусная нагрузка</h2>
+            <div class="graph__result-value"><%= viral_load.value %></div>
+          </div>
+        <% end %>
         <div class="graph__date"><%= I18n.l(date, format: :long) %></div>
       </div>
       <div class="graph__body">
@@ -27,12 +31,14 @@
           </defs>
           <%= render 'graphs/viral_load', points: viral_load.points %>
           <%= render 'graphs/immune_status', points: immune_status.points %>
-          <%= render 'graphs/tredline', tredline: tredline %>
+          <%= render('graphs/tredline', tredline: tredline) if immune_status.points.any? %>
         </svg>
-        <% if tredline.a.positive? %>
-          <%= render 'graphs/falling_hero', x: 510, y: tredline.a * 510 + tredline.b - 8 %>
-        <% else %>
-          <%= render 'graphs/rising_hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
+        <% if immune_status.value.present? %>
+          <% if tredline.a.positive? %>
+            <%= render 'graphs/falling_hero', x: 510, y: tredline.a * 510 + tredline.b - 8 %>
+          <% else %>
+            <%= render 'graphs/rising_hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
+          <% end %>
         <% end %>
         <%= render 'graphs/immune_status_interval', interval: immune_status_interval %>
         <%= render 'graphs/label', type: 'viral_load', data: viral_load %>

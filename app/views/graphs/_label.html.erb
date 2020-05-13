@@ -1,5 +1,7 @@
-<%- min = type == 'immune_status' ? data.points.min { |p| p.y } : data.points.max { |p| p.y } %>
-<div
-  class="graph__label graph__label--<%= type %>"
-  style="<%= "left:#{min.x - 50 > 0 ? min.x - 50 : min.x}px;top:#{min.y - 18}px" %>"
->Макс. <%= data.max %></div>
+<% if data.points.any? %>
+  <%- max_point = data.points.min { |p| p.y } %>
+  <div
+    class="graph__label graph__label--<%= type %>"
+    style="<%= "left:#{max_point.x - 50 > 0 ? max_point.x - 50 : max_point.x}px;top:#{max_point.y - 18}px" %>"
+  >Макс. <%= data.max %></div>
+<% end %>
