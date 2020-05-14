@@ -6,7 +6,7 @@ class GraphsController < ApplicationController
   def show
     return unless Rails.env.development?
 
-    service = GraphService.new(user: user, width: 600, height: 300)
+    service = GraphService.new(user)
     render locals: service.render_data, layout: false
   end
 

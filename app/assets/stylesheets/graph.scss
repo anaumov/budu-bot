@@ -14,24 +14,18 @@ $black: #020202;
 }
 
 html, body {
-  width: 600px;
-  height: 400px;
   margin: 0;
 }
 .graph {
   font-family: 'ProximaNova', sans-serif;
 
   position: relative;
-  width: 600px;
-  height: 400px;
   background: white;
-  &__header {
-    height: 100px;
-  }
-
   &__body {
     position: relative;
-    height: 300px;
+  }
+  &__body-inner {
+    position: relative;
   }
 
   &__result {
@@ -42,6 +36,7 @@ html, body {
       font-size: 20px;
       margin: 0;
       font-weight: normal;
+      white-space: nowrap;
     }
     &-value {
       font-weight: normal;
@@ -53,7 +48,7 @@ html, body {
       left: 6px;
     }
     &--viral-load {
-      left: 216px;
+      left: 188px;
       min-width: 210px;
     }
   }
@@ -67,10 +62,6 @@ html, body {
     position: absolute;
     right: 6px;
     top: 6px;
-  }
-  &__chartbox {
-    width: 600px;
-    height: 400px;
   }
 
   &__label {

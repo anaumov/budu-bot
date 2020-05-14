@@ -5,17 +5,14 @@ class GraphService
   Result = Struct.new(:points, :date, :value, :max)
 
   MAX_ON_HEIGHT = 0.8 # max height of graph related to canvas
-  MAX_ON_WIDTH = 0.8 # max height of graph related to canvas
   IMMUNE_STATUS_INTERVAL = { bottom: 400, top: 1200 }.freeze
 
-  def initialize(user:, width:, height:)
+  def initialize(user)
     @user = user
-    @width = width
-    @height = height
   end
 
   def render_image
-    kit = IMGKit.new(render_html, quality: 100, width: 600, height: 400)
+    kit = IMGKit.new(render_html, quality: 100, width: Graph.canvas_width, height: Graph.canvas_height)
     kit.stylesheets << File.join(Rails.root, '/public/graph.css')
     kit.to_file("current_graph_for_#{user.id}.jpg")
   end
@@ -30,7 +27,6 @@ class GraphService
     immune_status_tredline = TredlineService.perform(immune_status_data.points)
 
     {
-      dimentions: Point.new(width, height),
       immune_status: immune_status_data,
       viral_load: viral_load_data,
       tredline: immune_status_tredline,
@@ -41,7 +37,7 @@ class GraphService
 
   private
 
-  attr_reader :user, :width, :height
+  attr_reader :user
 
   def render_html
     ActionController::Base.new.render_to_string(
@@ -53,7 +49,12 @@ class GraphService
 
   def results_for(result_type)
     results = test_results.where(result_type: result_type)
-    Result.new(points(results), results.last&.date, results.last&.value, results&.pluck(:value)&.max)
+    points = calculate_points(
+      results: results,
+      x_resolution: date_resolution,
+      y_resolution: value_resolution(results)
+    )
+    Result.new(points, results.last&.date, results.last&.value, results&.pluck(:value)&.max)
   end
 
   def test_results
@@ -64,40 +65,41 @@ class GraphService
     return [] if test_results.immune_status.empty?
 
     resolution = value_resolution(test_results.immune_status)
-    [IMMUNE_STATUS_INTERVAL[:bottom] * resolution, IMMUNE_STATUS_INTERVAL[:top] * resolution]
+    [
+      IMMUNE_STATUS_INTERVAL[:bottom] * resolution,
+      IMMUNE_STATUS_INTERVAL[:top] * resolution
+    ]
   end
 
-  def points(results)
+  def calculate_points(results:, x_resolution:, y_resolution:)
     return [] if results.empty?
 
     min_date = results.pluck(:date).min
-    x_resolution = day_resolution(results)
-    y_resolution = value_resolution(results)
     results.map do |result|
       x_coord = (result.date - min_date) * x_resolution
       y_coord = result.value * y_resolution
-      Point.new(x_coord.to_i, height - y_coord.to_i)
+      Point.new(x_coord.to_i, Graph.chart_height - y_coord.to_i)
     end
   end
 
   # NOTE: How many pixels in one day
-  def day_resolution(results)
-    dates = results.pluck(:date)
-    if dates.count > 1
-      width * MAX_ON_WIDTH / (dates.max - dates.min).to_f
-    else
-      width * MAX_ON_WIDTH / 2
-    end
+  def date_resolution
+    dates = test_results.pluck(:date)
+    Graph.chart_width / (dates.max - dates.min).to_f
   end
 
   # NOTE: How many pixels in one point
   def value_resolution(results)
-    values = results.pluck(:value)
-    values.push(IMMUNE_STATUS_INTERVAL[:top]) if results.take&.immune_status?
-    if values.count > 1 && values.any? { |v| !v.zero? }
-      height * MAX_ON_HEIGHT / values.max.to_f
+    if results.take.immune_status?
+      Graph.chart_height / (IMMUNE_STATUS_INTERVAL[:top] + 100).to_f
     else
-      height * MAX_ON_HEIGHT
+      resolution_for_viral_load(results)
     end
+  end
+
+  def resolution_for_viral_load(results)
+    max_value = results.pluck(:value).max
+    denominator = max_value&.positive? ? max_value : 1
+    Graph.chart_height / denominator.to_f
   end
 end

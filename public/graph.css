@@ -372,70 +372,76 @@ template {
   display: none;
 }
 
-/* line 4, app/assets/stylesheets/graph.scss */
+@font-face {
+  font-family: 'ProximaNova';
+  src: url(/proxima_nova.eot);
+  src: url(/proxima_nova.eot?#iefix) format("embedded-opentype"), url(/proxima_nova.woff2) format("woff2"), url(/proxima_nova.woff) format("woff"), url(/proxima_nova.ttf) format("truetype"), url(/proxima_nova.svg#proxima_novaregular) format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* line 16, app/assets/stylesheets/graph.scss */
 html, body {
-  width: 600px;
-  height: 400px;
   margin: 0;
 }
 
-/* line 9, app/assets/stylesheets/graph.scss */
+/* line 19, app/assets/stylesheets/graph.scss */
 .graph {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'ProximaNova', sans-serif;
   position: relative;
-  width: 600px;
-  height: 400px;
   background: white;
 }
 
-/* line 15, app/assets/stylesheets/graph.scss */
-.graph__header {
-  height: 100px;
-}
-
-/* line 19, app/assets/stylesheets/graph.scss */
+/* line 24, app/assets/stylesheets/graph.scss */
 .graph__body {
   position: relative;
-  height: 300px;
 }
 
-/* line 24, app/assets/stylesheets/graph.scss */
+/* line 27, app/assets/stylesheets/graph.scss */
+.graph__body-inner {
+  position: relative;
+}
+
+/* line 31, app/assets/stylesheets/graph.scss */
 .graph__result {
   position: absolute;
   top: 6px;
 }
 
-/* line 28, app/assets/stylesheets/graph.scss */
+/* line 35, app/assets/stylesheets/graph.scss */
 .graph__result-title {
   font-size: 20px;
   margin: 0;
+  font-weight: normal;
+  white-space: nowrap;
 }
 
-/* line 32, app/assets/stylesheets/graph.scss */
+/* line 41, app/assets/stylesheets/graph.scss */
 .graph__result-value {
+  font-weight: normal;
   font-size: 60px;
   line-height: 56px;
 }
 
-/* line 36, app/assets/stylesheets/graph.scss */
+/* line 46, app/assets/stylesheets/graph.scss */
 .graph__result--immune-status {
   color: #00BE92;
   left: 6px;
 }
 
-/* line 40, app/assets/stylesheets/graph.scss */
+/* line 50, app/assets/stylesheets/graph.scss */
 .graph__result--viral-load {
-  left: 216px;
+  left: 188px;
   min-width: 210px;
 }
 
-/* line 46, app/assets/stylesheets/graph.scss */
+/* line 56, app/assets/stylesheets/graph.scss */
 .graph__text {
   font-size: 15px;
   line-height: 0;
 }
 
-/* line 50, app/assets/stylesheets/graph.scss */
+/* line 60, app/assets/stylesheets/graph.scss */
 .graph__date {
   font-size: 20px;
   position: absolute;
@@ -443,24 +449,18 @@ html, body {
   top: 6px;
 }
 
-/* line 56, app/assets/stylesheets/graph.scss */
-.graph__chartbox {
-  width: 600px;
-  height: 400px;
-}
-
-/* line 61, app/assets/stylesheets/graph.scss */
+/* line 67, app/assets/stylesheets/graph.scss */
 .graph__label {
   position: absolute;
   white-space: nowrap;
 }
 
-/* line 66, app/assets/stylesheets/graph.scss */
+/* line 72, app/assets/stylesheets/graph.scss */
 .graph__label--immune_status {
   color: #00BE92;
 }
 
-/* line 69, app/assets/stylesheets/graph.scss */
+/* line 75, app/assets/stylesheets/graph.scss */
 .graph__interval {
   position: absolute;
   width: 100%;

@@ -2,6 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      html, body {
+        width: <%= Graph.canvas_width %>px;
+        height: <%= Graph.canvas_height %>px;
+        margin: 0;
+      }
+      .graph {
+        width: <%= Graph.canvas_width %>px;
+        height: <%= Graph.canvas_height %>px;
+      }
+      .graph__header {
+        height: <%= Graph.header_height %>px;
+      }
+      .graph__body {
+        height: <%= Graph.graph_height %>px;
+        padding-top: <%= Graph.graph_height - Graph.chart_height %>px;
+      }
+      .graph__body-inner {
+        height: <%= Graph.chart_height %>px;
+      }
+    </style>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   </head>
   <body>
@@ -19,29 +40,31 @@
             <div class="graph__result-value"><%= viral_load.value %></div>
           </div>
         <% end %>
-        <div class="graph__date"><%= I18n.l(date, format: :long) %></div>
+        <div class="graph__date"><%= I18n.l(date, format: :short_month) %></div>
       </div>
       <div class="graph__body">
-        <svg viewBox="0 0 600 300" class="graph__chart">
-          <defs>
-            <marker id="circle" markerWidth="4" markerHeight="4" refx="2" refy="2">
-              <circle cx="2" cy="2" r="2" stroke="none" fill="#3887cc"/>
-            </marker>
-          </defs>
-          <%= render('graphs/viral_load', points: viral_load.points) if viral_load.points.any? %>
-          <%= render('graphs/immune_status', points: immune_status.points) if immune_status.points.any? %>
-          <%= render('graphs/tredline', tredline: tredline) if immune_status.points.any? %>
-        </svg>
-        <% if immune_status.value.present? %>
-          <% if tredline.a.positive? %>
-            <%= render 'graphs/falling_hero', x: 510, y: tredline.a * 510 + tredline.b - 8 %>
-          <% else %>
-            <%= render 'graphs/rising_hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
+        <div class="graph__body-inner">
+          <svg viewBox="0 0 <%= Graph.canvas_width %> <%= Graph.chart_height %>" class="graph__chart">
+            <defs>
+              <marker id="circle" markerWidth="4" markerHeight="4" refx="2" refy="2">
+                <circle cx="2" cy="2" r="2" stroke="none" fill="#3887cc"/>
+              </marker>
+            </defs>
+            <%= render('graphs/viral_load', points: viral_load.points) if viral_load.points.any? %>
+            <%= render('graphs/immune_status', points: immune_status.points) if immune_status.points.any? %>
+            <%= render('graphs/tredline', tredline: tredline) if immune_status.points.any? %>
+          </svg>
+          <% if immune_status.value.present? %>
+            <% if tredline.a.positive? %>
+              <%= render 'graphs/falling_hero', x: 510, y: tredline.a * 510 + tredline.b - 8 %>
+            <% else %>
+              <%= render 'graphs/rising_hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
+            <% end %>
           <% end %>
-        <% end %>
-        <%= render 'graphs/immune_status_interval', interval: immune_status_interval %>
-        <%= render 'graphs/label', type: 'viral_load', data: viral_load %>
-        <%= render 'graphs/label', type: 'immune_status', data: immune_status %>
+          <%= render 'graphs/immune_status_interval', interval: immune_status_interval %>
+          <%= render 'graphs/label', type: 'viral_load', data: viral_load %>
+          <%= render 'graphs/label', type: 'immune_status', data: immune_status %>
+        </div>
       </div>
     </div>
   </body>
