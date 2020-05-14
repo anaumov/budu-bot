@@ -104,7 +104,8 @@ class GraphService
   end
 
   def stylesheet_path
-    asset = Rails.application.assets.find_asset('graph.css', base_path: Rails.application.root.to_s)
+    builder = Sprockets::Railtie.build_environment(Rails.application)
+    asset = builder.find_asset('graph.css', base_path: Rails.application.root.to_s)
     Rails.root.join('public', 'assets', asset.digest_path)
   end
 end
