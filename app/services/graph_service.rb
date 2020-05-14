@@ -13,7 +13,7 @@ class GraphService
 
   def render_image
     kit = IMGKit.new(render_html, quality: 100, width: Graph.canvas_width, height: Graph.canvas_height)
-    kit.stylesheets << File.join(Rails.root, '/public/graph.css')
+    kit.stylesheets << stylesheet_path
     kit.to_file("current_graph_for_#{user.id}.jpg")
   end
 
@@ -101,5 +101,10 @@ class GraphService
     max_value = results.pluck(:value).max
     denominator = max_value&.positive? ? max_value : 1
     Graph.chart_height / denominator.to_f
+  end
+
+  def stylesheet_path
+    asset = Rails.application.assets.find_asset('graph.css', base_path: Rails.application.root.to_s)
+    Rails.root.join('public', 'assets', asset.digest_path)
   end
 end
