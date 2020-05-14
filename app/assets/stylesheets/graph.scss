@@ -1,26 +1,15 @@
 @import 'normalize';
+@import 'proxima_nova';
 
 $green: #00BE92;
 $black: #020202;
 $light-gray: #AEAEAE;
 
-@font-face {
-  font-family: 'ProximaNova';
-  src: url('https://ikeepon.ru/fonts/proxima_nova.eot');
-  src: url('https://ikeepon.ru/fonts/proxima_nova.eot?#iefix') format('embedded-opentype'),
-       url('https://ikeepon.ru/fonts/proxima_nova.woff2') format('woff2'),
-       url('https://ikeepon.ru/fonts/proxima_nova.woff') format('woff'),
-       url('https://ikeepon.ru/fonts/proxima_nova.ttf') format('truetype'),
-       url('https://ikeepon.ru/fonts/proxima_nova.svg#proxima_novaregular') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
 html, body {
   margin: 0;
 }
 .graph {
-  font-family: 'ProximaNova', sans-serif;
+  font-family: 'ProximaNova', serif;
 
   position: relative;
   background: white;
@@ -64,6 +53,7 @@ html, body {
     position: absolute;
     right: 6px;
     top: 6px;
+    white-space: nowrap;
   }
   &__label {
     position: absolute;
