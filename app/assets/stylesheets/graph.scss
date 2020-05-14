@@ -2,6 +2,7 @@
 
 $green: #00BE92;
 $black: #020202;
+$light-gray: #AEAEAE;
 
 @font-face {
   font-family: 'ProximaNova';
@@ -54,7 +55,6 @@ html, body {
       min-width: 210px;
     }
   }
-
   &__text {
     font-size: 15px;
     line-height: 0;
@@ -65,12 +65,10 @@ html, body {
     right: 6px;
     top: 6px;
   }
-
   &__label {
     position: absolute;
     white-space: nowrap;
   }
-
   &__label--immune_status {
     color: #00BE92;
   }
@@ -78,5 +76,22 @@ html, body {
     position: absolute;
     width: 100%;
     background: rgba(0, 190, 146, 0.1);
+  }
+  &__year {
+    position: absolute;
+    bottom: 0;
+    color: $light-gray;
+    font-size: 15px;
+
+    &-line {
+      position: absolute;
+      border: 1px solid $light-gray;
+      bottom: 0;
+      opacity: 0.5;
+    }
+    &-title {
+      position: relative;
+      left: 4px;
+    }
   }
 }

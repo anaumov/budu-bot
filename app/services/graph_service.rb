@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GraphService
-  Point = Struct.new(:x, :y)
+  Point = Struct.new(:x, :y, :title)
   Result = Struct.new(:points, :date, :value, :max)
 
   MAX_ON_HEIGHT = 0.8 # max height of graph related to canvas
@@ -30,6 +30,7 @@ class GraphService
       immune_status: immune_status_data,
       viral_load: viral_load_data,
       tredline: immune_status_tredline,
+      years: years_points,
       immune_status_interval: immune_status_interval,
       date: [immune_status_data&.date, viral_load_data&.date].compact.max
     }
@@ -84,8 +85,19 @@ class GraphService
 
   # NOTE: How many pixels in one day
   def date_resolution
+    return @date_resolution if @date_resolution
+
     dates = test_results.pluck(:date)
-    Graph.chart_width / (dates.max - dates.min).to_f
+    @date_resolution = Graph.chart_width / (dates.max - dates.min).to_f
+  end
+
+  def years_points
+    dates = test_results.pluck(:date)
+    years = dates.map(&:year).uniq[1..]
+    years.map do |year|
+      x_coord = (Date.new(year) - dates.min) * date_resolution
+      Point.new(x_coord, 0, year)
+    end
   end
 
   # NOTE: How many pixels in one point

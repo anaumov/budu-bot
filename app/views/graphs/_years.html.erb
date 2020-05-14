@@ -1,0 +1,8 @@
+<% if years.any? %>
+  <% years.each do |year| %>
+    <div class="graph__year" style="<%= "left:#{year.x}px" %>">
+      <div class="graph__year-title"><%= year.title %></div>
+      <div class="graph__year-line" style="<%= "height:#{Graph.graph_height}px" %>"></div>
+    </div>
+  <% end %>
+<% end %>
