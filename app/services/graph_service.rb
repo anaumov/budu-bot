@@ -94,7 +94,8 @@ class GraphService
   def years_points
     dates = test_results.pluck(:date)
     years = dates.map(&:year).uniq[1..]
-    years.map do |year|
+    all_years = (years.first..years.last).to_a
+    all_years.map do |year|
       x_coord = (Date.new(year) - dates.min) * date_resolution
       Point.new(x_coord, 0, year)
     end
