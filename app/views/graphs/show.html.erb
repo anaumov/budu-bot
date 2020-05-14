@@ -56,9 +56,9 @@
           </svg>
           <% if immune_status.value.present? %>
             <% if tredline.a.positive? %>
-              <%= render 'graphs/falling_hero', x: 510, y: tredline.a * 510 + tredline.b - 8 %>
+              <%= render 'graphs/falling_hero', x: Graph.chart_width, y: tredline.a * Graph.chart_width + tredline.b - 8 %>
             <% else %>
-              <%= render 'graphs/rising_hero', x: 510, y: tredline.a * 510 + tredline.b - 30 %>
+              <%= render 'graphs/rising_hero', x: Graph.chart_width, y: tredline.a * Graph.chart_width + tredline.b - 30 %>
             <% end %>
           <% end %>
           <%= render 'graphs/immune_status_interval', interval: immune_status_interval %>
