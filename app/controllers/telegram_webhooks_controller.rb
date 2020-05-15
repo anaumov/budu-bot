@@ -9,11 +9,13 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
 
   def start!(*)
     message = Message.build(:on_start, name: current_user.first_name)
-    if current_user.notification_set?
-      send_message(message)
-    else
-      setup_notifications(message)
-    end
+    respond_with :message, text: message, reply_markup: {
+      inline_keyboard: [[
+        { text: 'напоминания', callback_data: 'setup_noty' },
+        { text: 'результаты', callback_data: 'results_info' },
+        { text: 'не сейчас', callback_data: 'not_now' }
+      ]]
+    }
   end
 
   def table!(*)

@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 module TelegramCallbacksConcern
-  ALLOWED_ACTIONS = %w[remove_test_result notifications_setup set_notification daily_pill].freeze
+  ALLOWED_ACTIONS = %w[
+    remove_test_result notifications_setup set_notification daily_pill
+    setup_noty results_info not_now
+  ].freeze
 
   def parse_callback_data_and_response(data)
     @action, @value = data.split(':')
@@ -68,6 +71,25 @@ module TelegramCallbacksConcern
     current_user.update!(notification_time: value)
     remove_buttons!
     send_message(Message.build(:notifications_set, time: "#{current_user.notification_time}:00"))
+  end
+
+  def setup_noty
+    hide_keyboard
+    setup_notifications
+  end
+
+  def results_info
+    hide_keyboard
+    send_message(Message.build(:notifications_info))
+  end
+
+  def not_now
+    hide_keyboard
+    send_message(Message.build(:not_now))
+  end
+
+  def hide_keyboard
+    edit_message :reply_markup, reply_markup: { inline_keyboard: [] }
   end
 
   def valid_action?

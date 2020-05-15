@@ -16,7 +16,6 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
     it 'send hello message and start setup' do
       start!
       expect(Message).to have_received(:build).with(:on_start, any_args)
-      expect(Message).to have_received(:build).with(:init_notifications_setup)
     end
 
     context 'when notification already set' do
