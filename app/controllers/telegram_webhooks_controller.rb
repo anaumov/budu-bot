@@ -9,7 +9,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
 
   def start!(*)
     message = Message.build(:on_start, name: current_user.first_name)
-    respond_with :message, text: message, reply_markup: {
+    respond_with :message, text: message, parse_mode: :Markdown, reply_markup: {
       inline_keyboard: [[
         { text: 'напоминания', callback_data: 'setup_noty' },
         { text: 'результаты', callback_data: 'results_info' },
@@ -61,7 +61,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     results = TestResultsFactory.perform(current_user, message['text'])
     message = Message.test_result_message(results)
     ids = results.map { |el| el[:result]&.id }.compact
-    respond_with :message, text: message, reply_markup: {
+    respond_with :message, text: message, parse_mode: :Markdown, reply_markup: {
       inline_keyboard: [[
         { text: 'Отменить запись', callback_data: "remove_test_result:#{ids.first}-#{ids.last}}" }
       ]]
