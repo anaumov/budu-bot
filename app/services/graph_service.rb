@@ -14,7 +14,7 @@ class GraphService
   def render_image
     kit = IMGKit.new(render_html, quality: 100, width: Graph.canvas_width, height: Graph.canvas_height)
     kit.stylesheets << stylesheet_path
-    kit.to_file("current_graph_for_#{user.id}.jpg")
+    kit.to_file("current_graph_for_#{user.id}.png")
   end
 
   def remove_file(file)

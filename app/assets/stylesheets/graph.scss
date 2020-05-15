@@ -3,7 +3,7 @@
 
 $green: #00BE92;
 $black: #020202;
-$light-gray: #AEAEAE;
+$light-gray: #F2F0F0;
 
 html, body {
   margin: 0;
@@ -75,7 +75,7 @@ html, body {
 
     &-line {
       position: absolute;
-      border: 1px solid $light-gray;
+      border-left: 1px solid $light-gray;
       bottom: 0;
       opacity: 0.5;
     }
