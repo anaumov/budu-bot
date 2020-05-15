@@ -17,13 +17,15 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def table!(*)
-    message = if current_user.test_results.any?
-                MessagesService.results_as_table(current_user)
-              else
-                Message.build(:no_test_results)
-              end
-
-    send_message(message)
+    if current_user.test_results.any?
+      message = MessagesService.results_as_table(current_user)
+      respond_with :message, text: "<pre>#{message}</pre>", parse_mode: :HTML
+      export_file = TestResultsExportService.perform(current_user)
+      respond_with :document, document: export_file
+      File.delete(export_file.path) if !Rails.env.test? && File.exist?(export_file.path)
+    else
+      send_message Message.build(:no_test_results)
+    end
   end
 
   def graph!(*)
@@ -45,6 +47,12 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
 
   def help!(*)
     send_message(Message.build(:help))
+  end
+
+  def unsafe_remove_all!(*)
+    send_message(MessagesService.results_as_table(current_user))
+    current_user.test_results.destroy_all
+    respond_with :message, text: 'Все записи удалены'
   end
 
   def message(message)

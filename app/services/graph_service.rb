@@ -103,6 +103,8 @@ class GraphService
 
   # NOTE: How many pixels in one point
   def value_resolution(results)
+    return if results.empty?
+
     if results.take.immune_status?
       Graph.chart_height / (IMMUNE_STATUS_INTERVAL[:top] + 100).to_f
     else

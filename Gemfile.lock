@@ -339,6 +339,8 @@ GEM
     telegram-bot-types (0.6.2)
       virtus (~> 1.0)
     temple (0.8.2)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -425,6 +427,7 @@ DEPENDENCIES
   sshkit-sudo
   telegram-bot
   telegram-bot-types
+  terminal-table
   timecop
   turbolinks (~> 5)
   tzinfo-data

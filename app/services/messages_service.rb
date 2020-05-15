@@ -2,13 +2,16 @@
 
 class MessagesService
   def self.results_as_table(user)
-    result = "Дата       ВН         CD4\n"
+    rows = []
     user.test_results.order(date: :asc).group_by(&:date).each do |date, results|
       immune_status = results.find(&:immune_status?)
-      viral_load = results.find(&:viral_load?)&.value&.to_s || ''
-      viral_load = viral_load.size < 6 ? (viral_load + ' ' * 2 * (6 - viral_load.size)) : viral_load
-      result += "#{date.strftime('%d.%m.%Y')}  #{viral_load}  #{immune_status&.value}\n"
+      viral_load = results.find(&:viral_load?)
+      rows << [viral_load&.value, immune_status&.value, date.strftime('%d.%m.%Y')]
     end
-    result
+    headings = ['вирусная нагрузка', 'иммунный статус', 'дата']
+    table = Terminal::Table.new(headings: headings, rows: rows)
+    table.align_column(0, :right)
+    table.align_column(1, :right)
+    table.to_s
   end
 end
