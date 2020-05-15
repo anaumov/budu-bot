@@ -22,7 +22,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
       respond_with :message, text: "<pre>#{message}</pre>", parse_mode: :HTML
       export_file = TestResultsExportService.perform(current_user)
       respond_with :document, document: export_file
-      File.delete(export_file.path) if !Rails.env.test? && File.exist?(export_file.path)
+      File.delete(export_file.path) if File.exist?(export_file.path)
     else
       send_message Message.build(:no_test_results)
     end

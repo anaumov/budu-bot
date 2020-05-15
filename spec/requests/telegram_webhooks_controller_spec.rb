@@ -43,10 +43,18 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
     context 'when user has test_results' do
       before do
         create :test_result, user: user
+        allow(MessagesService).to receive(:results_as_table)
+        allow(TestResultsExportService).to receive(:perform).and_call_original
       end
 
       it 'retuns message with results' do
-        expect { table! }.to send_telegram_message(bot, MessagesService.results_as_table(user))
+        table!
+        expect(MessagesService).to have_received(:results_as_table).with(user)
+      end
+
+      it 'retuns csv file' do
+        table!
+        expect(TestResultsExportService).to have_received(:perform).with(user)
       end
     end
   end
@@ -67,12 +75,12 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
       expect(Message).to have_received(:build).with(:no_test_results)
     end
 
-    context 'when user has test results' do
+    xcontext 'when user has test results' do
       before do
         create :test_result, user: user
       end
 
-      it 'retuns no graph' do
+      it 'retuns graph' do
         expect { graph! }.to make_telegram_request(bot, :sendPhoto)
       end
     end
