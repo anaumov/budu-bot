@@ -24,7 +24,7 @@ class TestResultsExportService
 
   def csv_data
     CSV.generate do |csv|
-      csv << ['вирусная нагрузка', 'иммунный статус', 'дата']
+      csv << %w[ВН CD4 Дата]
       user.test_results.order(date: :asc).group_by(&:date).each do |date, results|
         immune_status = results.find(&:immune_status?)
         viral_load = results.find(&:viral_load?)
