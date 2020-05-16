@@ -61,12 +61,13 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     results = TestResultsFactory.perform(current_user, message['text'])
     message = Message.test_result_message(results)
     ids = results.map { |el| el[:result]&.id }.compact
+    # FIXME: add desc about what is going to be removed
     respond_with :message, text: message, parse_mode: :Markdown, reply_markup: {
       inline_keyboard: [[
         { text: 'Отменить запись', callback_data: "remove_test_result:#{ids.first}-#{ids.last}}" }
       ]]
     }
-    respond_with_graph
+    respond_with_graph if current_user.test_results.any?
   end
 
   def callback_query(data)

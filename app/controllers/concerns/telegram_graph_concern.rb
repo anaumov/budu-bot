@@ -4,6 +4,8 @@ module TelegramGraphConcern
   private
 
   def respond_with_graph
+    return if current_user.test_results.empty?
+
     prepearing_message = respond_with(:message, text: 'Подготовка графика...').dig('result')
     service = GraphService.new(current_user)
     graph_file = service.render_image
