@@ -6,6 +6,7 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   include TelegramCallbacksConcern
   include TelegramCommandsConcern
   include TelegramGraphConcern
+  include TelegramRescueConcern
 
   def start!(*)
     message = Message.build(:on_start, name: current_user.first_name)
@@ -36,11 +37,6 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
     else
       send_message(Message.build(:no_test_results))
     end
-  rescue StandardError => e
-    Bugsnag.notify(e) if Rails.env.production?
-    raise e if Rails.env.development?
-
-    send_message(Message.build(:something_went_wrong))
   end
 
   def setup!(*)
