@@ -6,12 +6,12 @@ module TelegramCallbacksConcern
     setup_noty results_info not_now
   ].freeze
 
-  def parse_callback_data_and_response(data)
+  def callback_query(data)
     @action, @value = data.split(':')
     if valid_action?
       send(action)
     else
-      send_message(Message.build(:something_went_wrong))
+      send_message(text: Message.build(:something_went_wrong))
     end
   end
 
@@ -30,7 +30,7 @@ module TelegramCallbacksConcern
     end
 
     remove_buttons!
-    send_message(message)
+    send_message(text: message)
   end
 
   def remove_test_result
@@ -38,7 +38,7 @@ module TelegramCallbacksConcern
     range = from.present? && to.present? ? (from..to) : from
     current_user.test_results.where(id: range).destroy_all
     remove_buttons!
-    send_message('Удалено')
+    send_message(text: 'Удалено')
   end
 
   def notifications_setup
@@ -50,7 +50,7 @@ module TelegramCallbacksConcern
     when 'turn_off'
       current_user.update!(notification_time: nil)
       remove_buttons!
-      send_message(Message.build(:turned_off_notifications))
+      send_message(text: Message.build(:turned_off_notifications))
     else
       raise :err
     end
@@ -70,7 +70,7 @@ module TelegramCallbacksConcern
   def set_notification
     current_user.update!(notification_time: value)
     remove_buttons!
-    send_message(Message.build(:notifications_set, time: "#{current_user.notification_time}:00"))
+    send_message(text: Message.build(:notifications_set, time: "#{current_user.notification_time}:00"))
   end
 
   def setup_noty
@@ -80,12 +80,7 @@ module TelegramCallbacksConcern
 
   def results_info
     hide_keyboard
-    send_message(Message.build(:notifications_info))
-  end
-
-  def not_now
-    hide_keyboard
-    send_message(Message.build(:not_now))
+    send_message(text: Message.build(:notifications_info))
   end
 
   def hide_keyboard

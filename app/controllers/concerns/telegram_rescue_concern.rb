@@ -6,7 +6,7 @@ module TelegramRescueConcern
   def process_action(*args)
     super
   rescue StandardError => e
-    send_message(Message.build(:something_went_wrong))
+    send_message(text: Message.build(:something_went_wrong))
     Bugsnag.notify(e)
     raise e unless Rails.env.production?
   end

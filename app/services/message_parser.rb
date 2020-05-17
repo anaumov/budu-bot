@@ -26,7 +26,7 @@ class MessageParser
   attr_reader :message
 
   def parse_result_type
-    identity = message.match(/([\p{L}\s])+/)[0]&.strip
+    identity = message.match(/([\p{L}\s])+/).to_a.first&.strip
     if identity&.size == 1
       SHORT_MATCHER[identity]
     elsif identity.present?

@@ -1,6 +1,60 @@
 # frozen_string_literal: true
 
 module TelegramCommandsConcern
+  def start!(*)
+    message = Message.build(:on_start, name: current_user.first_name)
+    send_message(
+      text: message,
+      buttons: [[
+        { text: 'Напоминания', callback_data: 'setup_noty' },
+        { text: 'Результаты', callback_data: 'results_info' }
+      ]]
+    )
+  end
+
+  def table!(*)
+    if current_user.test_results.empty?
+      send_message(text: Message.build(:no_test_results))
+      return
+    end
+
+    message = MessagesService.results_as_table(current_user)
+    respond_with :message, text: "<pre>#{message}</pre>", parse_mode: :HTML
+    export_file = TestResultsExportService.perform(current_user)
+    respond_with :document, document: export_file
+    File.delete(export_file.path) if File.exist?(export_file.path)
+  end
+
+  def graph!(*)
+    if current_user.test_results.any?
+      respond_with_graph
+    else
+      send_message(text: Message.build(:no_test_results))
+    end
+  end
+
+  def setup!(*)
+    setup_notifications
+  end
+
+  def help!(*)
+    send_message(text: Message.build(:help))
+  end
+
+  def unsafe_remove_all!(*)
+    send_message(text: MessagesService.results_as_table(current_user))
+    current_user.test_results.destroy_all
+    send_message(text: 'Все записи удалены')
+  end
+
+  def action_missing(action, *args)
+    send_message(text: Message.build(:unknown_command, command: action))
+    Bugsnag.notify('Action missing') do |report|
+      report.severity = 'warning'
+      report.add_tab('Telegram request', { action: action, args: args })
+    end
+  end
+
   private
 
   def setup_notifications(init_message = '')
@@ -14,6 +68,6 @@ module TelegramCommandsConcern
       buttons.push({ text: 'Выключить', callback_data: 'notifications_setup:turn_off' })
     end
     message = init_message + "\n" + message if init_message.present?
-    respond_with :message, text: message, reply_markup: { inline_keyboard: [buttons] }
+    send_message(text: message, buttons: [buttons])
   end
 end
