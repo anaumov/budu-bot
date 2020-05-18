@@ -1,0 +1,7 @@
+semver inc patch
+CURRENT_VERSION=`semver`
+git add .semver
+git commit -m "$CURRENT_VERSION [skip ci]"
+git tag -a $CURRENT_VERSION -m "$CURRENT_VERSION [skip ci]"
+git push
+bundle exec cap production deploy

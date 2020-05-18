@@ -303,6 +303,7 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
+    semver2 (3.4.2)
     sidekiq (5.2.7)
       connection_pool (~> 2.2, >= 2.2.2)
       rack (>= 1.5.0)
@@ -420,6 +421,7 @@ DEPENDENCIES
   russian
   sass-rails (>= 6)
   selenium-webdriver
+  semver2
   simple_form
   slim
   spring

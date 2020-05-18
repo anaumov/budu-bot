@@ -66,6 +66,8 @@ group :development do
   gem 'capistrano-sidekiq', require: false
   gem 'capistrano-local-precompile', require: false
   gem 'sshkit-sudo'
+
+  gem 'semver2'
 end
 
 group :test do
