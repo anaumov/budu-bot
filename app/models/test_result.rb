@@ -12,7 +12,7 @@ class TestResult < ApplicationRecord
       message
     else
       test_results.first.message_view
-    end.capitalize
+    end
   end
 
   def ru_result_type

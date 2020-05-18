@@ -11,9 +11,9 @@ class Message < ApplicationRecord
   def self.test_result_message(results)
     report = results.map do |result|
       if result[:result].present?
-        "✅ «#{result[:message]}» – #{TestResult.to_message(result[:result])}"
+        "✅ «#{result[:message]}» — #{TestResult.to_message(result[:result])}"
       else
-        "❌ «#{result[:message]}» – не удалось распознать"
+        "❌ «#{result[:message]}» — не удалось распознать"
       end
     end
     build(:result_saved, report: report.join("\n"))
