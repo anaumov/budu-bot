@@ -5,7 +5,7 @@ class AddNoteAfterResultsMessage < ActiveRecord::Migration[6.0]
     Message.create(
       slug: :message_parse_success,
       desc: 'Если данные удалось распознать',
-      text: "\n\nЕсли вы видите, что ошиблись при вводе данные, нажмите ❌. Бот удалит введенные данные."
+      text: "\n\nЕсли вы ошиблись при вводе данныx, нажмите ❌. Бот удалит все данные, которые вы ввели в этом сообщении."
     )
   end
 end
