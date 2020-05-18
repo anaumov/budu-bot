@@ -9,14 +9,8 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   include TelegramRescueConcern
 
   def message(message)
-    results = TestResultsFactory.perform(current_user, message['text'])
-    message = Message.test_result_message(results)
-    ids = results.map { |el| el[:result]&.id }.compact
-    # FIXME: add desc about what is going to be removed
-    buttons = [[
-      { text: 'Отменить', callback_data: "remove_test_result:#{ids.first}-#{ids.last}}" }
-    ]]
-    send_message(text: message, buttons: buttons)
+    result = MessageParserService.perform(message['text'], current_user)
+    send_message(text: result[:message], buttons: result[:buttons])
     respond_with_graph if current_user.test_results.any?
   end
 end

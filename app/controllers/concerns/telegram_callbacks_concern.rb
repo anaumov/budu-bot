@@ -2,8 +2,8 @@
 
 module TelegramCallbacksConcern
   ALLOWED_ACTIONS = %w[
-    remove_test_result notifications_setup set_notification daily_pill
-    setup_noty results_info not_now
+    remove_test_result turn_off_notifications set_notification daily_pill
+    setup_noty results_info not_now hour_buttons
   ].freeze
 
   def callback_query(data)
@@ -41,30 +41,36 @@ module TelegramCallbacksConcern
     send_message(text: 'Удалено')
   end
 
-  def notifications_setup
-    case value
-    when 'morning'
-      respond_with_times((7..12).to_a)
-    when 'evening'
-      respond_with_times((16..22).to_a)
-    when 'turn_off'
-      current_user.update!(notification_time: nil)
-      remove_buttons!
-      send_message(text: Message.build(:turned_off_notifications))
-    else
-      raise :err
+  def hour_buttons
+    from, to = value.split('..').map(&:to_i)
+    buttons = [[{ text: Button.get(:earlier), callback_data: "hour_buttons:#{from - 6}..#{from - 1}" }]]
+    buttons += buttons_by_hours(from, to)
+    buttons << [{ text: Button.get(:later), callback_data: "hour_buttons:#{to + 1}..#{to + 6}" }]
+    edit_message :reply_markup, reply_markup: { inline_keyboard: buttons }
+  end
+
+  def turn_off_notifications
+    current_user.update!(notification_time: nil)
+    remove_buttons!
+    send_message(text: Message.build(:turned_off_notifications))
+  end
+
+  def buttons_by_hours(from, to)
+    hour_to_button = ->(hour) { [{ text: "#{hour}:00", callback_data: "set_notification:#{hour}" }] }
+    build_range(from, to).to_a.map(&hour_to_button)
+  end
+
+  def build_range(from, to)
+    (from..to).to_a.map do |hour|
+      hour = hour % 24
+      if hour > 23
+        hour - 24
+      elsif hour.negative?
+        hour + 24
+      else
+        hour
+      end
     end
-  end
-
-  def respond_with_times(hours)
-    edit_message :reply_markup, reply_markup: {
-      inline_keyboard: buttons_by_hours(hours)
-    }
-  end
-
-  def buttons_by_hours(hours)
-    hour_to_button = ->(hour) { { text: "#{hour}:00", callback_data: "set_notification:#{hour}" } }
-    [hours[0..2].map(&hour_to_button), hours[3..5].map(&hour_to_button)]
   end
 
   def set_notification

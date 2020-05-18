@@ -6,8 +6,8 @@ module TelegramCommandsConcern
     send_message(
       text: message,
       buttons: [[
-        { text: 'Напоминания', callback_data: 'setup_noty' },
-        { text: 'Результаты', callback_data: 'results_info' }
+        { text: Button.get(:notifications_setup), callback_data: 'setup_noty' },
+        { text: Button.get(:results_instruction), callback_data: 'results_info' }
       ]]
     )
   end
@@ -60,12 +60,12 @@ module TelegramCommandsConcern
   def setup_notifications(init_message = '')
     message = Message.build(:init_notifications_setup)
     buttons = [
-      { text: 'Утром', callback_data: 'notifications_setup:morning' },
-      { text: 'Вечером', callback_data: 'notifications_setup:evening' }
+      { text: Button.get(:morning), callback_data: 'hour_buttons:7..12' },
+      { text: Button.get(:evening), callback_data: 'hour_buttons:16..22' }
     ]
     if current_user.notification_set?
       message = Message.build(:notifications_setup, time: "#{current_user.notification_time}:00")
-      buttons.push({ text: 'Выключить', callback_data: 'notifications_setup:turn_off' })
+      buttons.push({ text: 'Отключить', callback_data: 'turn_off_notifications' })
     end
     message = init_message + "\n" + message if init_message.present?
     send_message(text: message, buttons: [buttons])

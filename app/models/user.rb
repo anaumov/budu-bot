@@ -5,8 +5,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :recoverable, :rememberable
 
-  has_many :test_results
-  has_many :user_actions
+  has_many :test_results, dependent: :destroy
+  has_many :user_actions, dependent: :destroy
 
   def notification_set?
     notification_time.present?
