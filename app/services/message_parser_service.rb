@@ -28,7 +28,7 @@ class MessageParserService
   def buttons
     return [] unless success?
 
-    ids = results.map { |el| el[:result]&.id }.compact
+    ids = results.map { |el| el[:result]&.map(&:id) }.compact.sort
     [[{ text: Button.get(:cancel), callback_data: "remove_test_result:#{ids.first}-#{ids.last}}" }]]
   end
 

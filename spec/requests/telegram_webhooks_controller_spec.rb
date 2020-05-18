@@ -42,13 +42,13 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
     context 'when user has test_results' do
       before do
         create :test_result, user: user
-        allow(MessagesService).to receive(:results_as_table)
+        allow(MessagesService).to receive(:formatted_table)
         allow(TestResultsExportService).to receive(:perform).and_call_original
       end
 
       it 'retuns message with results' do
         table!
-        expect(MessagesService).to have_received(:results_as_table).with(user)
+        expect(MessagesService).to have_received(:formatted_table).with(user)
       end
 
       it 'retuns csv file' do

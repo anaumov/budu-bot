@@ -18,7 +18,7 @@ module TelegramCommandsConcern
       return
     end
 
-    message = MessagesService.results_as_table(current_user)
+    message = MessagesService.formatted_table(current_user)
     respond_with :message, text: "<pre>#{message}</pre>", parse_mode: :HTML
     export_file = TestResultsExportService.perform(current_user)
     respond_with :document, document: export_file
@@ -42,7 +42,7 @@ module TelegramCommandsConcern
   end
 
   def unsafe_remove_all!(*)
-    send_message(text: MessagesService.results_as_table(current_user))
+    send_message(text: MessagesService.plain_table(current_user))
     current_user.test_results.destroy_all
     send_message(text: 'Все записи удалены')
   end

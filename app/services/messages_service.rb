@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class MessagesService
-  def self.results_as_table(user)
-    new(user).results_as_table
+  def self.formatted_table(user)
+    new(user).formatted_table
   end
 
   def initialize(user)
     @user = user
   end
 
-  def results_as_table
+  def formatted_table
     rows = [['Вирусная нагрузка', 'Иммунный статус', 'Дата']]
     rows << :separator
     user.test_results.order(date: :asc).group_by(&:date).each do |date, results|
@@ -22,6 +22,16 @@ class MessagesService
     table.align_column(0, :right)
     table.align_column(1, :right)
     table.to_s
+  end
+
+  def self.plain_table(user)
+    result = []
+    user.test_results.order(date: :asc).group_by(&:date).each do |date, results|
+      immune_status = results.find(&:immune_status?)
+      viral_load = results.find(&:viral_load?)
+      result << "#{immune_status&.value} #{viral_load&.value} #{date.strftime('%d.%m.%Y')}"
+    end
+    result.join("\n")
   end
 
   private

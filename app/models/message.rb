@@ -11,7 +11,7 @@ class Message < ApplicationRecord
   def self.test_result_message(results)
     report = results.map do |result|
       if result[:result].present?
-        "✅ «#{result[:message]}» – #{result[:result].message_view}"
+        "✅ «#{result[:message]}» – #{TestResult.to_message(result[:result])}"
       else
         "❌ «#{result[:message]}» – не удалось распознать"
       end

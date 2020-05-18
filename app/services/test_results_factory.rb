@@ -19,11 +19,14 @@ class TestResultsFactory
   attr_reader :user, :full_message
 
   def parse!(message)
-    result_type, date, value = MessageParser.perform(message)
-    test_result = user.test_results.find_or_initialize_by(result_type: result_type, date: date)
-    test_result.assign_attributes(value: value, message: { text: message })
-    test_result.save!
-    test_result
+    ActiveRecord::Base.transaction do
+      MessageParser.perform(message).map do |result_type, value, date|
+        test_result = user.test_results.find_or_initialize_by(result_type: result_type, date: date)
+        test_result.assign_attributes(value: value, message: { text: message })
+        test_result.save!
+        test_result
+      end
+    end
   rescue StandardError => e
     Bugsnag.notify(e) { |report| report.add_tab('Message', { message: message }) }
   end

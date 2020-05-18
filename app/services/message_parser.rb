@@ -18,12 +18,23 @@ class MessageParser
   end
 
   def perform
-    [parse_result_type, parse_date, parse_value]
+    if one_result_message?
+      [[parse_result_type, parse_value, parse_date]]
+    else
+      [
+        [:immune_status, immune_status_value, parse_date],
+        [:viral_load, viral_load_value, parse_date]
+      ]
+    end
   end
 
   private
 
   attr_reader :message
+
+  def one_result_message?
+    message.match(/([\p{L}])+/).present?
+  end
 
   def parse_result_type
     identity = message.match(/([\p{L}\s])+/).to_a.first&.strip
@@ -47,5 +58,13 @@ class MessageParser
     Date.parse("#{day}.#{month}.#{year}")
   rescue Date::Error
     Date.today
+  end
+
+  def immune_status_value
+    message.split.first&.to_i
+  end
+
+  def viral_load_value
+    message.split.second&.to_i
   end
 end

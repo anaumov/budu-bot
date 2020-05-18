@@ -11,8 +11,12 @@ describe TestResultsFactory do
       expect { create_test_result }.to change(TestResult, :count).from(0).to(1)
     end
 
-    it 'responds with test_result' do
-      expect(create_test_result).to include(message: message, result: a_kind_of(TestResult))
+    it 'responds with message' do
+      expect(create_test_result.last[:message]).to eq(message)
+    end
+
+    it 'and test_result' do
+      expect(create_test_result.last[:result]).to all(be_an(TestResult))
     end
 
     context 'when message is invalid' do
