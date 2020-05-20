@@ -7,7 +7,7 @@ class TestResult < ApplicationRecord
 
   def self.to_message(test_results)
     if test_results.size > 1
-      message = test_results.map { |tr| "#{tr.ru_result_type} – #{tr.value}" }.join(', ')
+      message = test_results.map { |tr| "#{tr.ru_result_type} — #{tr.value}" }.join(', ')
       message += " на #{test_results.first.dec_date}"
       message
     else

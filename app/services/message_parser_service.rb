@@ -11,8 +11,7 @@ class MessageParserService
   end
 
   def perform
-    response_message = Message.build(:parse_title)
-    response_message += Message.test_result_message(results)
+    response_message = Message.build(:parse_title, results: Message.test_result_message(results))
     response_message += Message.build(:message_parse_success) if success?
     { message: response_message, buttons: buttons }
   end

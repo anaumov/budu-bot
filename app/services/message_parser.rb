@@ -21,6 +21,8 @@ class MessageParser
     if one_result_message?
       [[parse_result_type, parse_value, parse_date]]
     else
+      raise Error if message.split.size != 3
+
       [
         [:immune_status, immune_status_value, parse_date],
         [:viral_load, viral_load_value, parse_date]
