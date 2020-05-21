@@ -1,11 +1,9 @@
 <polygon
   fill="#020202"
-  stroke="none"
-  stroke-width="4"
   points="
     0, <%= Graph.chart_height %>
     <% points.each_with_index do |point| %>
-      <%= "#{point.x}, #{point.y - 17}," %>
+      <%= "#{point.x}, #{point.y - Graph.base * 1.7}," %>
     <% end %>
     <%= "#{points.last.x}, #{Graph.chart_height}," %>
     0, <%= Graph.chart_height %>

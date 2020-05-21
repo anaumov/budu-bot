@@ -3,6 +3,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
+      html {
+        font-size: <%= Graph.base %>px;
+      }
       html, body {
         width: <%= Graph.canvas_width %>px;
         height: <%= Graph.canvas_height %>px;
@@ -45,20 +48,15 @@
       <div class="graph__body">
         <div class="graph__body-inner">
           <svg viewBox="0 0 <%= Graph.canvas_width %> <%= Graph.chart_height %>" class="graph__chart">
-            <defs>
-              <marker id="circle" markerWidth="4" markerHeight="4" refx="2" refy="2">
-                <circle cx="2" cy="2" r="2" stroke="none" fill="#3887cc"/>
-              </marker>
-            </defs>
             <%= render('graphs/viral_load', points: viral_load.points) if viral_load.points.any? %>
             <%= render('graphs/immune_status', points: immune_status.points) if immune_status.points.any? %>
             <%= render('graphs/tredline', tredline: tredline) if immune_status.points.any? %>
           </svg>
           <% if immune_status.value.present? %>
             <% if tredline.a.positive? %>
-              <%= render 'graphs/falling_hero', x: Graph.chart_width, y: tredline.a * Graph.chart_width + tredline.b - 8 %>
+              <%= render 'graphs/falling_hero', x: Graph.chart_width, y: tredline.a * Graph.chart_width + tredline.b - 3 * Graph.base %>
             <% else %>
-              <%= render 'graphs/rising_hero', x: Graph.chart_width, y: tredline.a * Graph.chart_width + tredline.b - 30 %>
+              <%= render 'graphs/rising_hero', x: Graph.chart_width, y: tredline.a * Graph.chart_width + tredline.b - 3.7 * Graph.base %>
             <% end %>
           <% end %>
           <%= render 'graphs/immune_status_interval', interval: immune_status_interval %>

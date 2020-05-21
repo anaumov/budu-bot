@@ -1,11 +1,11 @@
 @import 'normalize';
 @import 'proxima_nova';
 
-$green: #00BE92;
+$green: #1FDCC5;
 $black: #020202;
-$light-gray: #F2F0F0;
+$light-gray: #E6E6E6;
 
-html, body {
+body, html {
   margin: 0;
 }
 .graph {
@@ -22,45 +22,47 @@ html, body {
 
   &__result {
     position: absolute;
-    top: 6px;
+    top: 0.6rem;
 
     &-title {
-      font-size: 20px;
+      font-size: 2rem;
       margin: 0;
       font-weight: normal;
       white-space: nowrap;
     }
     &-value {
       font-weight: normal;
-      font-size: 60px;
-      line-height: 56px;
+      font-size: 6rem;
+      line-height: 5.6rem;
     }
     &--immune-status {
       color: $green;
-      left: 6px;
+      left: 0.6rem;
     }
     &--viral-load {
-      left: 188px;
-      min-width: 210px;
+      left: 19.6rem;
+      min-width: 21.0rem;
     }
   }
   &__text {
-    font-size: 15px;
+    font-size: 1.5rem;
     line-height: 0;
   }
   &__date {
-    font-size: 20px;
+    font-size: 2rem;
     position: absolute;
-    right: 6px;
-    top: 6px;
+    right: 0.6rem;
+    top: 0.6rem;
     white-space: nowrap;
   }
   &__label {
     position: absolute;
     white-space: nowrap;
+    font-size: 1.5rem;
+    z-index: 2;
   }
   &__label--immune_status {
-    color: #00BE92;
+    color: #1FDCC5;
   }
   &__interval {
     position: absolute;
@@ -71,17 +73,16 @@ html, body {
     position: absolute;
     bottom: 0;
     color: $light-gray;
-    font-size: 15px;
+    font-size: 1.5rem;
 
     &-line {
       position: absolute;
-      border-left: 1px solid $light-gray;
+      border-left: 0.1rem solid $light-gray;
       bottom: 0;
-      opacity: 0.5;
     }
     &-title {
       position: relative;
-      left: 4px;
+      left: 0.4rem;
     }
   }
 }
