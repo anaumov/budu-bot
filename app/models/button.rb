@@ -7,7 +7,7 @@ class Button
     notifications_setup: 'Настроить 🔔',
     results_instruction: 'Отправить 📈',
     turn_off_notifications: 'Отключить 🔔',
-    cancel: '❌'
+    remove: 'Удалить ❌'
   }.freeze
 
   def self.get(key)
