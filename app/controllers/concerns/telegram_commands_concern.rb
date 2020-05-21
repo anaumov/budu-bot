@@ -59,15 +59,12 @@ module TelegramCommandsConcern
 
   def setup_notifications(init_message = '')
     message = Message.build(:init_notifications_setup)
-    buttons = [
-      { text: Button.get(:morning), callback_data: 'hour_buttons:7..12' },
-      { text: Button.get(:evening), callback_data: 'hour_buttons:16..22' }
-    ]
+    buttons = Bot::ButtonsBuilder.hour_buttons(7, 12)
     if current_user.notification_set?
       message = Message.build(:notifications_setup, time: "#{current_user.notification_time}:00")
-      buttons.push({ text: 'Отключить', callback_data: 'turn_off_notifications' })
+      buttons << [{ text: Button.get(:turn_off_notifications), callback_data: 'turn_off_notifications' }]
     end
     message = init_message + "\n" + message if init_message.present?
-    send_message(text: message, buttons: [buttons])
+    send_message(text: message, buttons: buttons)
   end
 end

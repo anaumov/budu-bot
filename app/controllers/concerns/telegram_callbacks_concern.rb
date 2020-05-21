@@ -43,9 +43,8 @@ module TelegramCallbacksConcern
 
   def hour_buttons
     from, to = value.split('..').map(&:to_i)
-    buttons = [[{ text: Button.get(:earlier), callback_data: "hour_buttons:#{from - 6}..#{from - 1}" }]]
-    buttons += buttons_by_hours(from, to)
-    buttons << [{ text: Button.get(:later), callback_data: "hour_buttons:#{to + 1}..#{to + 6}" }]
+    buttons = Bot::ButtonsBuilder.hour_buttons(from, to)
+    buttons << [{ text: Button.get(:turn_off_notifications), callback_data: 'turn_off_notifications' }] if current_user.notification_set?
     edit_message :reply_markup, reply_markup: { inline_keyboard: buttons }
   end
 
@@ -53,24 +52,6 @@ module TelegramCallbacksConcern
     current_user.update!(notification_time: nil)
     remove_buttons!
     send_message(text: Message.build(:turned_off_notifications))
-  end
-
-  def buttons_by_hours(from, to)
-    hour_to_button = ->(hour) { [{ text: "#{hour}:00", callback_data: "set_notification:#{hour}" }] }
-    build_range(from, to).to_a.map(&hour_to_button)
-  end
-
-  def build_range(from, to)
-    (from..to).to_a.map do |hour|
-      hour = hour % 24
-      if hour > 23
-        hour - 24
-      elsif hour.negative?
-        hour + 24
-      else
-        hour
-      end
-    end
   end
 
   def set_notification
