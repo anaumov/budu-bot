@@ -10,7 +10,7 @@ class MessagesService
   end
 
   def formatted_table
-    rows = [['Вирусная нагрузка', 'Иммунный статус', 'Дата']]
+    rows = [%w[ВН CD4 Дата]]
     rows << :separator
     user.test_results.order(date: :asc).group_by(&:date).each do |date, results|
       immune_status = results.find(&:immune_status?)
