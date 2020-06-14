@@ -1,11 +1,24 @@
-<polygon
-  fill="#020202"
-  points="
-    0, <%= Graph.chart_height %>
-    <% points.each_with_index do |point| %>
-      <%= "#{point.x}, #{point.y - Graph.base * 1.7}," %>
-    <% end %>
-    <%= "#{points.last.x}, #{Graph.chart_height}," %>
-    0, <%= Graph.chart_height %>
-  "
-/>
+<% if points.size == 1 %>
+  <% point = points.first %>
+  <polygon
+    fill="#020202"
+    points="
+      0, <%= Graph.chart_height %>
+      <%= "#{point.x + Graph.base}, #{Graph.chart_height}," %>
+      <%= "#{point.x + Graph.base}, #{point.y}," %>
+      0, <%= point.y %>
+    "
+  />
+<% else %>
+  <polygon
+    fill="#020202"
+    points="
+      0, <%= Graph.chart_height %>
+      <% points.each_with_index do |point| %>
+        <%= "#{point.x}, #{point.y - Graph.base * 1.7}," %>
+      <% end %>
+      <%= "#{points.last.x}, #{Graph.chart_height}," %>
+      0, <%= Graph.chart_height %>
+    "
+  />
+<% end %>

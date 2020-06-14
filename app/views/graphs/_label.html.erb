@@ -3,6 +3,6 @@
   <div
     class="graph__label graph__label--<%= type %>"
     <%- left = max_point.x - Graph.base * 3 > 0 ? max_point.x - Graph.base * 3 : max_point.x %>
-    style="<%= "left:#{left}px;top: calc(#{max_point.y}px - 1.8rem)" %>"
+    style="<%= "left:#{left}px;top: #{max_point.y - 1.8 * Graph.base}px" %>"
   >Макс. <%= data.max %></div>
 <% end %>

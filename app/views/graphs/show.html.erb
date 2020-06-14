@@ -54,10 +54,10 @@
           </svg>
           <%= render('graphs/hero', point: immune_status.points.last, tredline: tredline) if immune_status.value.present? %>
           <%= render 'graphs/immune_status_interval', interval: immune_status_interval %>
-          <%= render 'graphs/label', type: 'viral_load', data: viral_load %>
+          <%= render('graphs/label', type: 'viral_load', data: viral_load) if viral_load.points.size > 1 %>
           <%= render('graphs/label', type: 'immune_status', data: immune_status) if immune_status.points.size > 1 %>
           <%= render 'graphs/last_data_line', point: immune_status.points[-2] if immune_status.points.size > 2  %>
-          <%= render 'graphs/years', years: years %>
+          <%= render 'graphs/years', years: years if immune_status.points.size > 1 %>
         </div>
       </div>
     </div>
