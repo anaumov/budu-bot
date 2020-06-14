@@ -8,6 +8,8 @@ class TredlineService
   end
 
   def perform(points)
+    return Tredilne.new(-0.3, points.first.y) if points.size == 1
+
     # Formula https://math.stackexchange.com/questions/204020
     a = numerator(points) / denominator(points).to_f
     Tredilne.new(a, calculate_b(points, a))

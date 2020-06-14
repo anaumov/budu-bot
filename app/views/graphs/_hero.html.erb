@@ -1,0 +1,6 @@
+<% x = point.x + 2 * Graph.base %>
+<% if tredline.a.positive? %>
+  <%= render 'graphs/falling_hero', x: x, y: tredline.a * x + tredline.b - 0.5 * Graph.base %>
+<% else %>
+  <%= render 'graphs/rising_hero', x: x, y: tredline.a * x + tredline.b - 3.7 * Graph.base %>
+<% end %>

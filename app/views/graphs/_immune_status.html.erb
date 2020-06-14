@@ -1,12 +1,22 @@
-<% points.each_with_index do |point, index| %>
-  <% current_point = point %>
-  <% next_point = points[index + 1] %>
-  <% if next_point.present? %>
-    <polyline
-      fill="none"
-      stroke="#00BE92"
-      stroke-width="0.1rem"
-      points="<%= "#{current_point.x}, #{current_point.y}, #{next_point.x}, #{next_point.y}" %>"
+<% if points.size == 1 %>
+  <% point = points.first %>
+  <circle
+    fill="#00BE92"
+    r="<%= Graph.base / 2 %>"
+    cx="<%= point.x %>"
+    cy="<%= point.y %>"
+  />
+<% else %>
+  <% points.each_with_index do |point, index| %>
+    <% current_point = point %>
+    <% next_point = points[index + 1] %>
+    <% if next_point.present? %>
+      <polyline
+        fill="none"
+        stroke="#00BE92"
+        stroke-width="0.1rem"
+        points="<%= "#{current_point.x}, #{current_point.y}, #{next_point.x}, #{next_point.y}" %>"
       />
+    <% end %>
   <% end %>
 <% end %>
