@@ -62,6 +62,7 @@
           <%= render 'graphs/immune_status_interval', interval: immune_status_interval %>
           <%= render 'graphs/label', type: 'viral_load', data: viral_load %>
           <%= render 'graphs/label', type: 'immune_status', data: immune_status %>
+          <%= render 'graphs/last_data_line', point: immune_status.points[-2] if immune_status.points.size > 2  %>
           <%= render 'graphs/years', years: years %>
         </div>
       </div>

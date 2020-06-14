@@ -70,8 +70,18 @@ body, html {
     width: 100%;
     background: rgba(0, 190, 146, 0.1);
   }
+  &__chart {
+    position: absolute;
+    z-index: 1;
+  }
+  &__line {
+    position: absolute;
+    border-left: 0.1rem solid $light-gray;
+    bottom: 0;
+  }
   &__year {
     position: absolute;
+    z-index: 2;
     bottom: 0;
     color: $gray;
     font-size: 1.5rem;
