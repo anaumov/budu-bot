@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_21_122946) do
+ActiveRecord::Schema.define(version: 2020_06_14_152722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,14 +48,15 @@ ActiveRecord::Schema.define(version: 2020_05_21_122946) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer "telegram_chat_id"
     t.string "first_name"
     t.string "last_name"
-    t.string "telegram_username"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "notification_time"
     t.integer "last_notification_message_id"
+    t.string "encrypted_telegram_chat_id"
+    t.string "encrypted_telegram_chat_id_iv"
+    t.string "telegram_chat_id_hash"
     t.index ["email"], name: "index_users_on_email"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

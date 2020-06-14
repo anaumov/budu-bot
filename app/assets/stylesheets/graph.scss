@@ -76,7 +76,8 @@ body, html {
   }
   &__line {
     position: absolute;
-    border-left: 0.1rem solid $light-gray;
+    z-index: 3;
+    border-left: 0.1rem solid $gray;
     bottom: 0;
   }
   &__year {

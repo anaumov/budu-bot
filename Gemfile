@@ -30,6 +30,7 @@ gem 'simple_form'
 gem 'bugsnag'
 gem 'russian'
 gem 'terminal-table'
+gem 'attr_encrypted'
 
 group :development, :test do
   gem 'database_rewinder'

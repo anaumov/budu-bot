@@ -8,7 +8,8 @@ module TelegramUserConcern
   end
 
   def create_user!
-    User.find_or_create_by!(telegram_chat_id: chat['id'])
+    User.find_by(telegram_chat_id_hash: Hasher.perform(chat['id'])) ||
+      User.create!(telegram_chat_id: chat['id'])
   end
 
   def user_params

@@ -4,6 +4,11 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :recoverable, :rememberable
+  attr_encrypted :telegram_chat_id, key: Secrets.attr_encrypted_key
+
+  before_create do
+    self.telegram_chat_id_hash = Hasher.perform(telegram_chat_id)
+  end
 
   has_many :test_results, dependent: :destroy
   has_many :user_actions, dependent: :destroy
