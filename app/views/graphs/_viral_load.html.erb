@@ -5,8 +5,8 @@
     points="
       0, <%= Graph.chart_height %>
       <%= "#{point.x + Graph.base}, #{Graph.chart_height}," %>
-      <%= "#{point.x + Graph.base}, #{point.y}," %>
-      0, <%= point.y %>
+      <%= "#{point.x + Graph.base}, #{point.y == Graph.chart_height ? point.y - Graph.base * 1.7 : point.y}," %>
+      0, <%= (point.y == Graph.chart_height ? point.y - Graph.base * 1.7 : point.y) %>
     "
   />
 <% else %>
