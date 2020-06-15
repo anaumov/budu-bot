@@ -15,7 +15,7 @@
     points="
       0, <%= Graph.chart_height %>
       <% points.each_with_index do |point| %>
-        <%= "#{point.x}, #{point.y - Graph.base * 1.7}," %>
+        <%= "#{point.x}, #{point.y == Graph.chart_height ? point.y - Graph.base * 1.7 : point.y}," %>
       <% end %>
       <%= "#{points.last.x}, #{Graph.chart_height}," %>
       0, <%= Graph.chart_height %>
