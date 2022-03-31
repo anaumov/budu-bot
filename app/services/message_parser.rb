@@ -35,7 +35,7 @@ class MessageParser
   attr_reader :message
 
   def one_result_message?
-    message.match(/([\p{L}])+/).present?
+    message.match(/(\p{L})+/).present?
   end
 
   def parse_result_type
@@ -55,7 +55,7 @@ class MessageParser
     return Date.today if message.split.size < 3
 
     date = message.split.last
-    day, month, year = date.split(/[\.\-\:]/)
+    day, month, year = date.split(/[.\-:]/)
     year = "20#{year}" if year&.size == 2
     Date.parse("#{day}.#{month}.#{year}")
   rescue Date::Error

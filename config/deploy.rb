@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-lock '~> 3.13.0'
+lock '~> 3.17.0'
 
 set :application, 'ikeepon'
 set :repo_url, 'git@github.com:anaumov/budu-bot.git'
