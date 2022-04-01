@@ -26,4 +26,12 @@ class User < ApplicationRecord
     user_actions.create!(action_type: :pill_undone)
     update!(last_notification_message_id: nil)
   end
+
+  def turn_off_notifications!
+    update!(notification_time: nil)
+  end
+
+  def set_notification_time!(hour)
+    update!(notification_time: hour)
+  end
 end

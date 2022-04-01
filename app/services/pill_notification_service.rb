@@ -22,19 +22,19 @@ class PillNotificationService
   attr_reader :current_hour
 
   def notify_current_hour
-    send_messages(users: users_scope(0), message_slug: :daily_first)
+    send_messages(users: users_to_be_notified, message_slug: :daily_first)
   end
 
   def notify_prev_hour
-    send_messages(users: users_scope(1), message_slug: :daily_second)
+    send_messages(users: users_to_be_notified(hour_ago: 1), message_slug: :daily_second)
   end
 
   def notify_undone_message
-    send_messages(users: users_scope(2), message_slug: :daily_undone)
+    send_messages(users: users_to_be_notified(hour_ago: 2), message_slug: :daily_undone)
   end
 
   def undone_and_notify
-    users = users_scope(3)
+    users = users_to_be_notified(hour_ago: 3)
     send_messages(users: users, message_slug: :undone)
     users.each(&:pill_undone!)
   end
@@ -57,7 +57,7 @@ class PillNotificationService
       chat_id: user.telegram_chat_id,
       message_id: user.last_notification_message_id
     )
-  rescue Telegram::Bot::Error => e
+  rescue Telegram::Bot::Error, Telegram::Bot::Forbidden => e
     Bugsnag.notify(e) do |report|
       report.add_tab('User info', { id: user.id, message_id: user.last_notification_message_id })
     end
@@ -72,9 +72,10 @@ class PillNotificationService
     user.update!(last_notification_message_id: response&.dig('result', 'message_id'))
   end
 
-  def users_scope(shift)
-    User.where(notification_time: current_hour - shift)
+  def users_to_be_notified(hour_ago: 0)
+    User.where(notification_time: current_hour - hour_ago)
         .select { |user| user.user_actions.today.empty? }
+        .select { |user| bot_not_blocked_by(user) }
   end
 
   def greeting
@@ -95,5 +96,13 @@ class PillNotificationService
     else
       [{ text: '✅', callback_data: 'daily_pill:yes' }, { text: '❌', callback_data: 'daily_pill:no' }]
     end
+  end
+
+  def bot_not_blocked_by(user)
+    Telegram.bot.send_chat_action(chat_id: user.telegram_chat_id, action: 'typing')
+    true
+  rescue Telegram::Bot::Forbidden
+    user.update!(notification_time: nil)
+    false
   end
 end
