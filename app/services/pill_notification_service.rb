@@ -57,6 +57,10 @@ class PillNotificationService
       chat_id: user.telegram_chat_id,
       message_id: user.last_notification_message_id
     )
+  rescue Telegram::Bot::Error => e
+    Bugsnag.notify(e) do |report|
+      report.add_tab('User info', { id: user.id, message_id: user.last_notification_message_id })
+    end
   end
 
   def send_notification(user:, message:, buttons:)
