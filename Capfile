@@ -31,6 +31,7 @@ require 'capistrano-db-tasks'
 require 'capistrano/shell'
 
 install_plugin Capistrano::Puma
+install_plugin Capistrano::Puma::Daemon
 # install_plugin Capistrano::Puma::Monit
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
