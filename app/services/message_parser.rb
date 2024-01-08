@@ -39,12 +39,20 @@ class MessageParser
   end
 
   def parse_result_type
-    identity = message.match(/([\p{L}\s])+/).to_a.first&.strip
+    identity = parse_identity(message)
     if identity&.size == 1
       SHORT_MATCHER[identity]
     elsif identity.present?
-      FULL_MATCHER.find { |_, value| value.any? { |el| identity.include?(el) } }&.first
+      find_full_result_type(identity)
     end || (raise Error)
+  end
+
+  def parse_identity(message)
+    message.match(/([\p{L}\s])+/).to_a.first&.strip
+  end
+
+  def find_full_result_type(identity)
+    FULL_MATCHER.find { |_, value| value.any? { |el| identity.include?(el) } }&.first
   end
 
   def parse_value

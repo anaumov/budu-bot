@@ -64,7 +64,7 @@ module TelegramCommandsConcern
       message = Message.build(:notifications_setup, time: "#{current_user.notification_time}:00")
       buttons << [{ text: Button.get(:turn_off_notifications), callback_data: 'turn_off_notifications' }]
     end
-    message = init_message + "\n" + message if init_message.present?
+    message = "#{init_message}\n#{message}" if init_message.present?
     send_message(text: message, buttons: buttons)
   end
 end

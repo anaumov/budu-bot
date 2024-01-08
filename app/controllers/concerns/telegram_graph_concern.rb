@@ -18,7 +18,7 @@ module TelegramGraphConcern
   end
 
   def send_prepearing_message
-    @prepearing_message = respond_with(:message, text: 'Подготовка графика...').dig('result')
+    @prepearing_message = respond_with(:message, text: 'Подготовка графика...')['result']
   end
 
   def remove_preparing_message

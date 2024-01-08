@@ -31,7 +31,7 @@ class User < ApplicationRecord
     update!(notification_time: nil)
   end
 
-  def set_notification_time!(hour)
+  def update_notification_time!(hour)
     update!(notification_time: hour)
   end
 end

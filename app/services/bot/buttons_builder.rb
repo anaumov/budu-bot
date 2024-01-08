@@ -22,7 +22,7 @@ module Bot
 
     def build_range(from, to)
       (from..to).to_a.map do |hour|
-        hour = hour % 24
+        hour %= 24
         if hour > 23
           hour - 24
         elsif hour.negative?

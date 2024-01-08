@@ -55,7 +55,7 @@ module TelegramCallbacksConcern
   end
 
   def set_notification
-    current_user.set_notification_time!(value)
+    current_user.update_notification_time!(value)
     remove_buttons!
     send_message(text: Message.build(:notifications_set, time: "#{current_user.notification_time}:00"))
   end

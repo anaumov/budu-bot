@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GraphDataService
-  Result = Struct.new(:points, :date, :value, :max)
+  Result = Struct.new(:points, :date, :value, :max) # rubocop:disable Lint/StructNewOverride
 
   MAX_ON_HEIGHT = 0.8 # max height of graph related to canvas
   IMMUNE_STATUS_INTERVAL = { bottom: 400, top: 1200 }.freeze
