@@ -11,10 +11,16 @@ class PillNotificationService
   end
 
   def notify_users
+    Rails.logger.info "Starting sending notify_current_hour"
     notify_current_hour
+    Rails.logger.info "Starting notify_prev_hour"
     notify_prev_hour
+    Rails.logger.info "Starting notify_undone_message"
     notify_undone_message
+    Rails.logger.info "Starting undone_and_notify"
     undone_and_notify
+  rescue => e
+    Rails.logger.info e.message
   end
 
   private
