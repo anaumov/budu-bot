@@ -16,7 +16,7 @@
 # end
 #
 every 1.hour do
-  runner 'PillNotificationService.notify_users'
+  rake "notification:hourly"
 end
 
 # Learn more: http://github.com/javan/whenever
