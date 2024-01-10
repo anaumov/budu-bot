@@ -15,6 +15,8 @@
 #   rake "some:great:rake:task"
 # end
 #
+job_type :rake, 'export PATH="$HOME/.rbenv/bin:$PATH"; eval "$(rbenv init -)"; cd :path && :environment_variable=:environment bundle exec rake :task --silent :output'
+
 every 1.hour do
   rake 'notification:hourly'
 end
