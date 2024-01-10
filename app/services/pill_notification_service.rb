@@ -3,23 +3,30 @@
 class PillNotificationService
   # FIXME: use user timezone
   def self.notify_users
-    new(Time.zone.now.hour).notify_users
+    new.notify_users
   end
 
-  def initialize(current_hour)
+  def initialize(current_hour = Time.zone.now.hour)
     @current_hour = current_hour
   end
 
+  def notify_naumov
+    Rails.logger.info 'Starting notify_naumov'
+    users = User.where(email: 'alexsnaumov@gmail.com')
+    send_messages(users: users, message_slug: :daily_first)
+    Rails.logger.info 'Finished notify_naumov'
+  end
+
   def notify_users
-    Rails.logger.info "Starting sending notify_current_hour"
+    Rails.logger.info 'Starting sending notify_current_hour'
     notify_current_hour
-    Rails.logger.info "Starting notify_prev_hour"
+    Rails.logger.info 'Starting notify_prev_hour'
     notify_prev_hour
-    Rails.logger.info "Starting notify_undone_message"
+    Rails.logger.info 'Starting notify_undone_message'
     notify_undone_message
-    Rails.logger.info "Starting undone_and_notify"
+    Rails.logger.info 'Starting undone_and_notify'
     undone_and_notify
-  rescue => e
+  rescue StandardError => e
     Rails.logger.info e.message
   end
 

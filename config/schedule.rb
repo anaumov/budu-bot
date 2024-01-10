@@ -16,7 +16,11 @@
 # end
 #
 every 1.hour do
-  rake "notification:hourly"
+  rake 'notification:hourly'
+end
+
+every 1.minute do
+  rake 'notification:naumov'
 end
 
 # Learn more: http://github.com/javan/whenever
