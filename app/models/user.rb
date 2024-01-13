@@ -10,6 +10,10 @@ class User < ApplicationRecord
     self.telegram_chat_id_hash = Hasher.perform(telegram_chat_id)
   end
 
+  delegate :active?, :inactive?, to: :status
+
+  scope :active, -> { where(status: :active) }
+
   has_many :test_results, dependent: :destroy
   has_many :user_actions, dependent: :destroy
 
@@ -33,5 +37,13 @@ class User < ApplicationRecord
 
   def update_notification_time!(hour)
     update!(notification_time: hour)
+  end
+
+  def deactivate!
+    update!(status: :inactive)
+  end
+
+  def status
+    super.inquiry
   end
 end

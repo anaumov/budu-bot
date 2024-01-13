@@ -11,20 +11,14 @@ class PillNotificationService
   end
 
   def notify_naumov
-    Rails.logger.info 'Starting notify_naumov'
     users = User.where(email: 'alexsnaumov@gmail.com')
     send_messages(users: users, message_slug: :daily_first)
-    Rails.logger.info 'Finished notify_naumov'
   end
 
   def notify_users
-    Rails.logger.info 'Starting sending notify_current_hour'
     notify_current_hour
-    Rails.logger.info 'Starting notify_prev_hour'
     notify_prev_hour
-    Rails.logger.info 'Starting notify_undone_message'
     notify_undone_message
-    Rails.logger.info 'Starting undone_and_notify'
     undone_and_notify
   rescue StandardError => e
     Rails.logger.info e.message
@@ -86,7 +80,8 @@ class PillNotificationService
   end
 
   def users_to_be_notified(hour_ago: 0)
-    User.where(notification_time: current_hour - hour_ago)
+    User.active
+        .where(notification_time: current_hour - hour_ago)
         .select { |user| user.user_actions.today.empty? }
         .select { |user| bot_not_blocked_by(user) }
   end
@@ -115,7 +110,7 @@ class PillNotificationService
     Telegram.bot.send_chat_action(chat_id: user.telegram_chat_id, action: 'typing')
     true
   rescue Telegram::Bot::Forbidden
-    user.update!(notification_time: nil)
+    user.deactivate!
     false
   end
 end

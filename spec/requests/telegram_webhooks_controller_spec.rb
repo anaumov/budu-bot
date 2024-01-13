@@ -85,17 +85,38 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
     end
   end
 
-  # describe '#setup!' do
-  #   context 'when user has test_results' do
-  #   end
-  # end
-
   describe '#help!' do
     subject(:help!) { dispatch_command(:help, chat) }
 
     it 'sends help message' do
       help!
       expect(Message).to have_received(:build).with(:help)
+    end
+  end
+
+  describe '#message' do
+    subject(:receive_message) { dispatch_message("hello", message_params) }
+
+    let(:message_params) { { from: { id: 123 } , chat: { id: user.telegram_chat_id } } } 
+
+    context 'when user inactive' do
+      before { user.deactivate! }
+
+      it 'does nothing' do
+        receive_message
+        expect(Message).not_to have_received(:build)
+      end
+    end
+
+    context 'when bot blocked by user' do
+      before do
+        allow(Message).to receive(:build).and_raise(Telegram::Bot::Forbidden)
+      end
+
+      it 'deactivates user' do
+        receive_message
+        expect(user.reload).to be_inactive
+      end
     end
   end
 end
