@@ -8,7 +8,7 @@ module TelegramRescueConcern
   rescue StandardError => e
     raise e unless Rails.env.production?
 
-    send_message(text: Message.build(:something_went_wrong))
     Bugsnag.notify(e)
+    send_message(text: Message.build(:something_went_wrong))
   end
 end

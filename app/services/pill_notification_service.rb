@@ -64,7 +64,9 @@ class PillNotificationService
       chat_id: user.telegram_chat_id,
       message_id: user.last_notification_message_id
     )
-  rescue Telegram::Bot::Error, Telegram::Bot::Forbidden => e
+  rescue Telegram::Bot::Forbidden
+    current_user.deactivate!
+  rescue Telegram::Bot::Error => e
     Bugsnag.notify(e) do |report|
       report.add_tab('User info', { id: user.id, message_id: user.last_notification_message_id })
     end

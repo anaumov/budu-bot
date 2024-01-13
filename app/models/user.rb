@@ -43,6 +43,10 @@ class User < ApplicationRecord
     update!(status: :inactive)
   end
 
+  def activate!
+    update!(status: :active)
+  end
+
   def status
     super.inquiry
   end

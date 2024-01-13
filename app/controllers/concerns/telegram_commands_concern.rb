@@ -2,6 +2,7 @@
 
 module TelegramCommandsConcern
   def start!(*)
+    activate_user_if_inactive
     message = Message.build(:on_start, name: current_user.first_name)
     send_message(
       text: message,
@@ -48,11 +49,16 @@ module TelegramCommandsConcern
   end
 
   def action_missing(action, *args)
-    send_message(text: Message.build(:unknown_command, command: action))
+    if bot_blocked?
+      current_user.deactivate!
+      return
+    end
+
     Bugsnag.notify('Action missing') do |report|
       report.severity = 'warning'
       report.add_tab('Telegram request', { action: action, args: args })
     end
+    send_message(text: Message.build(:unknown_command, command: action))
   end
 
   private
@@ -66,5 +72,13 @@ module TelegramCommandsConcern
     end
     message = "#{init_message}\n#{message}" if init_message.present?
     send_message(text: message, buttons: buttons)
+  end
+
+  def bot_blocked?
+    payload.dig('new_chat_member', 'status') == 'kicked'
+  end
+
+  def activate_user_if_inactive
+    current_user.activate! if current_user.inactive?
   end
 end
